@@ -3,7 +3,60 @@
   "miniprogramRoot": "miniprogram/",
   "cloudfunctionRoot": "cloudfunctions/",
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      {
+        "type": "folder",
+        "value": "packageAPI"
+      },
+      {
+        "type": "folder",
+        "value": "packageCloud"
+      },
+      {
+        "type": "folder",
+        "value": "packageComponent"
+      },
+      {
+        "type": "folder",
+        "value": "packageExtend"
+      },
+      {
+        "type": "folder",
+        "value": "page"
+      },
+      {
+        "type": "folder",
+        "value": "node_modules"
+      },
+      {
+        "type": "folder",
+        "value": "miniprogram_npm"
+      },
+      {
+        "type": "folder",
+        "value": "workers"
+      },
+      {
+        "type": "suffix",
+        "value": ".md"
+      },
+      {
+        "type": "suffix",
+        "value": ".theme.json"
+      },
+      {
+        "type": "file",
+        "value": "app-darkmode.json"
+      },
+      {
+        "type": "file",
+        "value": "demo.theme.json"
+      },
+      {
+        "type": "file",
+        "value": "iconfont/iconfont.css"
+      }
+    ],
     "include": []
   },
   "setting": {

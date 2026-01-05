@@ -1,0 +1,39 @@
+/* 使用阿里巴巴矢量图标库的Unicode字符 */
+/* 如果需要在iconfont.cn上创建项目，可以使用以下Unicode字符 */
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 记账图标 - 使用Unicode字符 */
+.icon-record::before {
+  content: "\e6a3";
+}
+
+/* 添加图标 */
+.icon-add::before {
+  content: "\e6b9";
+}
+
+/* 统计图标 */
+.icon-statistics::before {
+  content: "\e6a4";
+}
+
+/* 删除图标 - 使用Unicode字符 */
+.icon-delete::before {
+  content: "\e6b8";
+}
+
+/* 日期图标 - 使用Unicode字符 */
+.icon-date::before {
+  content: "\e6a5";
+}
+
+/* 如果使用在线字体，请从iconfont.cn下载字体文件并引入 */
+/* 或者使用Unicode字符直接显示 */
+

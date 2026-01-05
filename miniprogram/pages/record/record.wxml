@@ -1,0 +1,36 @@
+<view class="container">
+  <!-- 日期选择区域 -->
+  <view class="date-header">
+    <view class="date-picker" bindtap="showCalendar">
+      <text class="date-text">{{dateDisplay}}</text>
+      <image class="date-icon" src="../../image/calendar.png" mode="aspectFit"></image>
+    </view>
+  </view>
+  
+  <!-- 日历组件 -->
+  <calendar selectedDate="{{currentDate}}" show="{{showCalendar}}" bindselect="onDateSelect" bindclose="hideCalendar"></calendar>
+
+  <!-- 记录列表 -->
+  <view class="records-list">
+    <view wx:if="{{records.length === 0}}" class="empty-tip">
+      暂无记录
+    </view>
+    <view wx:for="{{records}}" wx:key="_id" class="record-item">
+      <view class="record-content">
+        <view class="record-header">
+          <view class="record-type">{{item.type}}</view>
+          <view class="record-time">{{item.createTimeDisplay}}</view>
+        </view>
+        <view class="record-details">
+          <text wx:if="{{item.quantity}}">数量：{{item.quantity}}{{item.unit}}</text>
+          <text wx:if="{{item.weight}}">重量：{{item.weight}}市斤</text>
+          <text wx:if="{{item.postage}}">邮费：{{item.postage}}元</text>
+        </view>
+      </view>
+      <view class="delete-btn" data-id="{{item._id}}" data-index="{{index}}" bindtap="deleteRecord">
+        <image class="delete-icon" src="../../image/delete.png" mode="aspectFit"></image>
+      </view>
+    </view>
+  </view>
+</view>
+

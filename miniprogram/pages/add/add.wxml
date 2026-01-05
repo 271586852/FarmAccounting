@@ -1,0 +1,79 @@
+<view class="container">
+  <view class="form-container">
+    <!-- 第一行：种类选择 -->
+    <view class="form-item">
+      <view class="form-label">种类 <text class="required">*</text></view>
+      <view class="options-container">
+        <view wx:for="{{typeOptions}}" wx:key="index" 
+              class="option-item {{selectedType === item ? 'selected' : ''}}"
+              data-index="{{index}}"
+              data-type="{{item}}"
+              bindtap="onTypeSelect">
+          {{item}}
+        </view>
+      </view>
+      <input wx:if="{{showCustomInput}}" 
+             class="custom-input" 
+             placeholder="请输入其他种类" 
+             value="{{customType}}"
+             bindinput="onCustomTypeInput" />
+    </view>
+
+    <!-- 第二行：数量 -->
+    <view class="form-item">
+      <view class="form-label">数量 <text class="required">*</text></view>
+      <view class="number-input-group">
+        <view class="number-btn" bindtap="decreaseQuantity">-</view>
+        <input class="number-input" 
+               type="number" 
+               value="{{quantity}}" 
+               bindinput="onQuantityInput" />
+        <view class="number-btn" bindtap="increaseQuantity">+</view>
+        <view class="unit-options">
+          <view wx:for="{{unitOptions}}" wx:key="index"
+                class="unit-option {{unit === item ? 'selected' : ''}}"
+                data-unit="{{item}}"
+                bindtap="onUnitSelect">
+            {{item}}
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 第三行：重量 -->
+    <view class="form-item">
+      <view class="form-label">重量</view>
+      <view class="number-input-group">
+        <view class="number-btn" bindtap="decreaseWeight">-</view>
+        <input class="number-input" 
+               type="digit" 
+               value="{{weight}}" 
+               placeholder="0"
+               bindinput="onWeightInput" />
+        <view class="number-btn" bindtap="increaseWeight">+</view>
+        <text class="unit-text">市斤</text>
+      </view>
+    </view>
+
+    <!-- 第四行：邮费 -->
+    <view class="form-item">
+      <view class="form-label">邮费</view>
+      <view class="postage-input-group">
+        <input class="postage-input" 
+               type="digit" 
+               value="{{postage}}" 
+               placeholder="0"
+               bindinput="onPostageInput" />
+        <text class="unit-text">元</text>
+      </view>
+    </view>
+
+    <!-- 提交按钮 -->
+    <button class="submit-btn" bindtap="submitForm">保存</button>
+    
+    <!-- 配置检查提示 -->
+    <view class="config-tip" bindtap="checkConfig">
+      <text>💡 如果保存失败，点击这里检查配置</text>
+    </view>
+  </view>
+</view>

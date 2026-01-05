@@ -1,0 +1,34 @@
+# 微信小程序
+project.private.config.json
+
+# Node
+node_modules/
+npm-debug.log
+package-lock.json
+
+# 编辑器
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 操作系统
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 日志文件
+*.log
+
+# 临时文件
+*.tmp
+*.temp
+
+# 构建产物
+miniprogram/miniprogram_npm/
+
+# 其他
+*.bak
+*.cache
+

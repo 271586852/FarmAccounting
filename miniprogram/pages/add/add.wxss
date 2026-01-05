@@ -1,0 +1,159 @@
+.container {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding: 20rpx;
+  padding-bottom: 120rpx;
+}
+
+.form-container {
+  background-color: #fff;
+  border-radius: 10rpx;
+  padding: 40rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.form-item {
+  margin-bottom: 40rpx;
+}
+
+.form-item:last-of-type {
+  margin-bottom: 0;
+}
+
+.form-label {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 20rpx;
+  font-weight: 500;
+}
+
+.required {
+  color: #ff4444;
+}
+
+.options-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+}
+
+.option-item {
+  flex: 1;
+  min-width: 120rpx;
+  padding: 20rpx;
+  text-align: center;
+  background-color: #f8f8f8;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  color: #333;
+  border: 2rpx solid transparent;
+  transition: all 0.3s;
+}
+
+.option-item.selected {
+  background-color: #1aad19;
+  color: #fff;
+  border-color: #1aad19;
+}
+
+.custom-input {
+  margin-top: 20rpx;
+  padding: 20rpx;
+  background-color: #f8f8f8;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+}
+
+.number-input-group {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.number-btn {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #1aad19;
+  color: #fff;
+  border-radius: 8rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.number-input {
+  flex: 1;
+  padding: 20rpx;
+  background-color: #f8f8f8;
+  border-radius: 8rpx;
+  text-align: center;
+  font-size: 28rpx;
+}
+
+.unit-options {
+  display: flex;
+  gap: 10rpx;
+}
+
+.unit-option {
+  padding: 10rpx 20rpx;
+  background-color: #f8f8f8;
+  border-radius: 8rpx;
+  font-size: 24rpx;
+  color: #333;
+  border: 2rpx solid transparent;
+  min-width: 60rpx;
+  text-align: center;
+}
+
+.unit-option.selected {
+  background-color: #1aad19;
+  color: #fff;
+  border-color: #1aad19;
+}
+
+.unit-text {
+  font-size: 28rpx;
+  color: #666;
+  margin-left: 20rpx;
+}
+
+.postage-input-group {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.postage-input {
+  flex: 1;
+  padding: 20rpx;
+  background-color: #f8f8f8;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+}
+
+.submit-btn {
+  margin-top: 60rpx;
+  background-color: #1aad19;
+  color: #fff;
+  border-radius: 8rpx;
+  font-size: 32rpx;
+  padding: 24rpx;
+}
+
+.submit-btn::after {
+  border: none;
+}
+
+.config-tip {
+  margin-top: 30rpx;
+  padding: 20rpx;
+  background-color: #fff3cd;
+  border-radius: 8rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: #856404;
+}
+

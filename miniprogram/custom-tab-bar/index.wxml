@@ -1,0 +1,30 @@
+<view class="tab-bar">
+  <view wx:for="{{list}}" wx:key="index" 
+        class="tab-bar-item {{selected === index ? 'selected' : ''}}"
+        data-path="{{item.pagePath}}"
+        data-index="{{index}}"
+        bindtap="switchTab">
+    <view wx:if="{{item.isSpecial}}" class="special-add-btn">
+      <view class="add-icon-wrapper">
+        <view class="add-icon">+</view>
+      </view>
+      <text class="add-text">{{item.text}}</text>
+    </view>
+    <view wx:else class="normal-tab">
+      <view class="tab-icon">
+        <!-- 记账图标 -->
+        <view wx:if="{{index === 0}}" class="icon-wrapper">
+          <image wx:if="{{selected === index}}" class="icon-img" src="/image/record-active.png" mode="aspectFit"></image>
+          <image wx:else class="icon-img" src="/image/record.png" mode="aspectFit"></image>
+        </view>
+        <!-- 统计图标 -->
+        <view wx:if="{{index === 2}}" class="icon-wrapper">
+          <image wx:if="{{selected === index}}" class="icon-img" src="/image/statistics-active.png" mode="aspectFit"></image>
+          <image wx:else class="icon-img" src="/image/statistics.png" mode="aspectFit"></image>
+        </view>
+      </view>
+      <text class="tab-text">{{item.text}}</text>
+    </view>
+  </view>
+</view>
+

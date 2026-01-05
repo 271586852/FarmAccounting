@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "记账",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "calendar": "/components/calendar/calendar"
+  }
+}
+

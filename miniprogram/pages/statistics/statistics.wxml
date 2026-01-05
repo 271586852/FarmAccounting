@@ -1,0 +1,86 @@
+<view class="container">
+  <!-- 登录页面 -->
+  <view wx:if="{{!isLoggedIn}}" class="login-container">
+    <view class="login-form">
+      <view class="login-title">管理员登录</view>
+      <view class="form-item">
+        <input class="input" 
+               placeholder="请输入账号" 
+               value="{{username}}"
+               bindinput="onUsernameInput" />
+      </view>
+      <view class="form-item">
+        <input class="input" 
+               type="password" 
+               placeholder="请输入密码" 
+               value="{{password}}"
+               bindinput="onPasswordInput" />
+      </view>
+      <button class="login-btn" bindtap="login">登录</button>
+    </view>
+  </view>
+
+  <!-- 统计页面 -->
+  <view wx:else class="statistics-container">
+    <!-- 头部：日期选择和退出 -->
+    <view class="header">
+      <view class="date-picker" bindtap="showCalendar">
+        <text class="date-text">{{dateDisplay}}</text>
+        <image class="date-icon" src="../../image/calendar.png" mode="aspectFit"></image>
+      </view>
+      <view class="logout-btn" bindtap="logout">退出</view>
+    </view>
+    
+    <!-- 日历组件 -->
+    <calendar selectedDate="{{currentDate}}" show="{{showCalendar}}" bindselect="onDateSelect" bindclose="hideCalendar"></calendar>
+
+    <!-- 统计概览 -->
+    <view class="stats-overview">
+      <view class="stat-card">
+        <view class="stat-label">总数量</view>
+        <view class="stat-value">{{statistics.totalQuantity}}</view>
+      </view>
+      <view class="stat-card">
+        <view class="stat-label">总重量</view>
+        <view class="stat-value">{{statistics.totalWeight}}市斤</view>
+      </view>
+      <view class="stat-card">
+        <view class="stat-label">总邮费</view>
+        <view class="stat-value">{{statistics.totalPostage}}元</view>
+      </view>
+    </view>
+
+    <!-- 按种类统计 -->
+    <view class="type-stats">
+      <view class="section-title">按种类统计</view>
+      <view wx:if="{{Object.keys(statistics.typeStats).length === 0}}" class="empty-tip">
+        暂无数据
+      </view>
+      <view wx:for="{{typeStatsList}}" wx:key="type" class="type-stat-item">
+        <view class="type-name">{{item.type}}</view>
+        <view class="type-details">
+          <text>记录数：{{item.count}}</text>
+          <text wx:if="{{item.quantity > 0}}">数量：{{item.quantity}}</text>
+          <text wx:if="{{item.weight > 0}}">重量：{{item.weight}}市斤</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 详细记录列表 -->
+    <view class="records-section">
+      <view class="section-title">详细记录</view>
+      <view wx:if="{{records.length === 0}}" class="empty-tip">
+        暂无记录
+      </view>
+      <view wx:for="{{records}}" wx:key="_id" class="record-item">
+        <view class="record-type">{{item.type}}</view>
+        <view class="record-details">
+          <text wx:if="{{item.quantity}}">数量：{{item.quantity}}{{item.unit}}</text>
+          <text wx:if="{{item.weight}}">重量：{{item.weight}}市斤</text>
+          <text wx:if="{{item.postage}}">邮费：{{item.postage}}元</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+

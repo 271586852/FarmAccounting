@@ -4,6 +4,7 @@
   padding-bottom: 200rpx;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
 }
 
 .date-header {

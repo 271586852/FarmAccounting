@@ -6,7 +6,37 @@ Page({
     currentDate: dateUtil.getToday(),
     dateDisplay: '',
     records: [],
-    showCalendar: false
+    showCalendar: false,
+
+    // 编辑弹窗
+    showEditModal: false,
+    editId: '',
+    typeOptions: ['沙糖桔', '贡柑', '茶油', '其他'],
+    unitOptions: ['箱', '筐', '袋'],
+    saleTypeOptions: ['批发', '业务', '零售'],
+    gradeOptions: ['特大', '中大', '中果', '中小', '小果', '次果', '珍珠果', '榨汁果'],
+    editForm: {
+      type: '',
+      customType: '',
+      quantity: 0,
+      unit: '箱',
+      weight: '',
+      postage: '',
+      customer: '',
+      saleType: '',
+      grade: '',
+      unitPrice: '',
+      freight: '',
+      handlingFee: '',
+      agencyFee: '',
+      outBasket: '',
+      returnBasket: '',
+      deliverer: '',
+      receivedAmount: '',
+      payee: '',
+      paymentMethod: '',
+      remark: ''
+    }
   },
 
   onLoad() {
@@ -146,6 +176,149 @@ Page({
         }
       }
     })
+  },
+
+  /**
+   * 编辑记录
+   */
+  onEditRecord(e) {
+    const id = e.currentTarget.dataset.id
+    if (!id) return
+    const record = this.data.records.find(r => r._id === id)
+    if (!record) return
+    const inOptions = this.data.typeOptions.includes(record.type)
+    const type = inOptions ? record.type : '其他'
+    const customType = inOptions ? '' : (record.type || '')
+    this.setData({
+      showEditModal: true,
+      editId: id,
+      editForm: {
+        type,
+        customType,
+        quantity: record.quantity || 0,
+        unit: record.unit || '箱',
+        weight: record.weight === 0 || record.weight ? record.weight : '',
+        postage: record.postage === 0 || record.postage ? record.postage : '',
+        customer: record.customer || '',
+        saleType: record.saleType || '',
+        grade: record.grade || '',
+        unitPrice: record.unitPrice === 0 || record.unitPrice ? record.unitPrice : '',
+        freight: record.freight === 0 || record.freight ? record.freight : '',
+        handlingFee: record.handlingFee === 0 || record.handlingFee ? record.handlingFee : '',
+        agencyFee: record.agencyFee === 0 || record.agencyFee ? record.agencyFee : '',
+        outBasket: record.outBasket === 0 || record.outBasket ? record.outBasket : '',
+        returnBasket: record.returnBasket === 0 || record.returnBasket ? record.returnBasket : '',
+        deliverer: record.deliverer || '',
+        receivedAmount: record.receivedAmount === 0 || record.receivedAmount ? record.receivedAmount : '',
+        payee: record.payee || '',
+        paymentMethod: record.paymentMethod || '',
+        remark: record.remark || ''
+      }
+    })
+  },
+
+  closeEditModal() {
+    this.setData({
+      showEditModal: false,
+      editId: '',
+      editForm: {
+        type: '',
+        customType: '',
+        quantity: 0,
+        unit: '箱',
+        weight: '',
+        postage: '',
+        customer: '',
+        saleType: '',
+        grade: '',
+        unitPrice: '',
+        freight: '',
+        handlingFee: '',
+        agencyFee: '',
+        outBasket: '',
+        returnBasket: '',
+        deliverer: '',
+        receivedAmount: '',
+        payee: '',
+        paymentMethod: '',
+        remark: ''
+      }
+    })
+  },
+
+  onEditFieldInput(e) {
+    const { field } = e.currentTarget.dataset
+    this.setData({
+      editForm: {
+        ...this.data.editForm,
+        [field]: e.detail.value
+      }
+    })
+  },
+
+  onEditOptionSelect(e) {
+    const { field, value } = e.currentTarget.dataset
+    const isSame = this.data.editForm[field] === value
+    const next = isSame ? '' : value
+    this.setData({
+      editForm: {
+        ...this.data.editForm,
+        [field]: next,
+        ...(field === 'type' ? { customType: next === '其他' ? this.data.editForm.customType : '' } : {})
+      }
+    })
+  },
+
+  async submitEdit() {
+    if (!this.data.editId) return
+    const f = this.data.editForm
+    const finalType = f.type === '其他' ? f.customType : f.type
+    if (!finalType || !finalType.trim()) {
+      wx.showToast({ title: '请选择/填写种类', icon: 'none' })
+      return
+    }
+    if (!f.quantity || f.quantity <= 0) {
+      wx.showToast({ title: '请输入数量', icon: 'none' })
+      return
+    }
+    const parseNum = (v) => {
+      if (v === '' || v === null || v === undefined) return null
+      const n = parseFloat(v)
+      return isNaN(n) ? null : n
+    }
+    const data = {
+      type: finalType.trim(),
+      quantity: parseNum(f.quantity) || 0,
+      unit: f.unit || '箱',
+      weight: parseNum(f.weight),
+      postage: parseNum(f.postage),
+      customer: f.customer.trim(),
+      saleType: f.saleType,
+      grade: f.grade,
+      unitPrice: parseNum(f.unitPrice),
+      freight: parseNum(f.freight),
+      handlingFee: parseNum(f.handlingFee),
+      agencyFee: parseNum(f.agencyFee),
+      outBasket: parseNum(f.outBasket),
+      returnBasket: parseNum(f.returnBasket),
+      deliverer: f.deliverer.trim(),
+      receivedAmount: parseNum(f.receivedAmount),
+      payee: f.payee.trim(),
+      paymentMethod: f.paymentMethod.trim(),
+      remark: f.remark.trim()
+    }
+    wx.showLoading({ title: '更新中...' })
+    try {
+      await dbUtil.updateRecord(this.data.editId, data)
+      wx.showToast({ title: '更新成功', icon: 'success' })
+      this.closeEditModal()
+      this.loadRecords()
+    } catch (err) {
+      console.error('更新失败', err)
+      wx.showToast({ title: '更新失败', icon: 'none' })
+    } finally {
+      wx.hideLoading()
+    }
   }
 })
 

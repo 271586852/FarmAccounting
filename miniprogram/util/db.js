@@ -46,6 +46,25 @@ function deleteRecord(id) {
 }
 
 /**
+ * 根据ID获取记录
+ */
+function getRecordById(id) {
+  return db.collection('records').doc(id).get()
+}
+
+/**
+ * 更新记录
+ */
+function updateRecord(id, data) {
+  return db.collection('records').doc(id).update({
+    data: {
+      ...data,
+      updateTime: db.serverDate()
+    }
+  })
+}
+
+/**
  * 获取所有记录（用于统计）
  */
 function getAllRecords() {
@@ -121,6 +140,8 @@ module.exports = {
   addRecord,
   getRecordsByDate,
   deleteRecord,
+  getRecordById,
+  updateRecord,
   getAllRecords,
   getRecordsByDateRange,
   addExpressRecord,

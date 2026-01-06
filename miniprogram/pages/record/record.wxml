@@ -15,21 +15,261 @@
     <view wx:if="{{records.length === 0}}" class="empty-tip">
       暂无记录
     </view>
-    <view wx:for="{{records}}" wx:key="_id" class="record-item">
+    <view wx:for="{{records}}" wx:key="_id" class="record-item" bindtap="onEditRecord" data-id="{{item._id}}">
       <view class="record-content">
         <view class="record-header">
           <view class="record-type">{{item.type}}</view>
           <view class="record-time">{{item.createTimeDisplay}}</view>
         </view>
+        <view class="record-recorder" wx:if="{{item.recorder}}">
+          登记人：{{item.recorder}}
+        </view>
         <view class="record-details">
           <text wx:if="{{item.quantity}}">数量：{{item.quantity}}{{item.unit}}</text>
-          <text wx:if="{{item.weight}}">重量：{{item.weight}}市斤</text>
-          <text wx:if="{{item.postage}}">邮费：{{item.postage}}元</text>
+          <text wx:if="{{item.weight || item.weight === 0}}">重量：{{item.weight}}市斤</text>
+          <text wx:if="{{item.postage || item.postage === 0}}">邮费：{{item.postage}}元</text>
+          <text wx:if="{{item.customer}}">客户：{{item.customer}}</text>
+          <text wx:if="{{item.saleType}}">销售：{{item.saleType}}</text>
+          <text wx:if="{{item.grade}}">果级：{{item.grade}}</text>
+          <text wx:if="{{item.unitPrice || item.unitPrice === 0}}">单价：{{item.unitPrice}}元</text>
+          <text wx:if="{{item.freight || item.freight === 0}}">运费：{{item.freight}}元</text>
+          <text wx:if="{{item.handlingFee || item.handlingFee === 0}}">搬运：{{item.handlingFee}}元</text>
+          <text wx:if="{{item.agencyFee || item.agencyFee === 0}}">代办：{{item.agencyFee}}元</text>
+          <text wx:if="{{item.outBasket || item.outBasket === 0}}">出筐：{{item.outBasket}}</text>
+          <text wx:if="{{item.returnBasket || item.returnBasket === 0}}">回筐：{{item.returnBasket}}</text>
+          <text wx:if="{{item.deliverer}}">送货人：{{item.deliverer}}</text>
+          <text wx:if="{{item.receivedAmount || item.receivedAmount === 0}}">实收：{{item.receivedAmount}}元</text>
+          <text wx:if="{{item.payee}}">收款人：{{item.payee}}</text>
+          <text wx:if="{{item.paymentMethod}}">收款方式：{{item.paymentMethod}}</text>
+          <text wx:if="{{item.remark}}">备注：{{item.remark}}</text>
         </view>
       </view>
-      <view class="delete-btn" data-id="{{item._id}}" data-index="{{index}}" bindtap="deleteRecord">
+      <view class="delete-btn" data-id="{{item._id}}" data-index="{{index}}" catchtap="deleteRecord">
         <image class="delete-icon" src="../../image/delete.png" mode="aspectFit"></image>
       </view>
+    </view>
+  </view>
+
+  <!-- 编辑弹窗 -->
+  <view wx:if="{{showEditModal}}" class="edit-mask" catchtouchmove="true" bindtap="closeEditModal"></view>
+  <view wx:if="{{showEditModal}}" class="edit-modal">
+    <view class="edit-header">
+      <text>编辑记录</text>
+      <view class="close-btn" bindtap="closeEditModal">×</view>
+    </view>
+    <scroll-view scroll-y class="edit-body">
+      <!-- 种类 -->
+      <view class="form-item">
+        <view class="form-label">种类</view>
+        <view class="options-container">
+          <view wx:for="{{typeOptions}}" wx:key="type"
+                class="option-item {{editForm.type === item ? 'selected' : ''}}"
+                data-field="type"
+                data-value="{{item}}"
+                bindtap="onEditOptionSelect">
+            {{item}}
+          </view>
+        </view>
+        <input wx:if="{{editForm.type === '其他'}}"
+               class="input"
+               placeholder="请输入其他种类"
+               value="{{editForm.customType}}"
+               data-field="customType"
+               bindinput="onEditFieldInput" />
+      </view>
+
+      <!-- 数量 -->
+      <view class="form-item">
+        <view class="form-label">数量</view>
+        <input class="input"
+               type="number"
+               value="{{editForm.quantity}}"
+               data-field="quantity"
+               bindinput="onEditFieldInput" />
+      </view>
+
+      <!-- 单位 -->
+      <view class="form-item">
+        <view class="form-label">单位</view>
+        <view class="options-container">
+          <view wx:for="{{unitOptions}}" wx:key="unit"
+                class="option-item {{editForm.unit === item ? 'selected' : ''}}"
+                data-field="unit"
+                data-value="{{item}}"
+                bindtap="onEditOptionSelect">
+            {{item}}
+          </view>
+        </view>
+      </view>
+
+      <!-- 重量 -->
+      <view class="form-item">
+        <view class="form-label">重量</view>
+        <input class="input"
+               type="digit"
+               value="{{editForm.weight}}"
+               data-field="weight"
+               bindinput="onEditFieldInput" />
+      </view>
+
+      <!-- 邮费 -->
+      <view class="form-item">
+        <view class="form-label">邮费</view>
+        <input class="input"
+               type="digit"
+               value="{{editForm.postage}}"
+               data-field="postage"
+               bindinput="onEditFieldInput" />
+      </view>
+
+      <!-- 客户 -->
+      <view class="form-item">
+        <view class="form-label">客户</view>
+        <input class="input"
+               value="{{editForm.customer}}"
+               placeholder="请输入客户"
+               data-field="customer"
+               bindinput="onEditFieldInput" />
+      </view>
+
+      <!-- 销售 -->
+      <view class="form-item">
+        <view class="form-label">销售</view>
+        <view class="options-container">
+          <view wx:for="{{saleTypeOptions}}" wx:key="sale"
+                class="option-item {{editForm.saleType === item ? 'selected' : ''}}"
+                data-field="saleType"
+                data-value="{{item}}"
+                bindtap="onEditOptionSelect">
+            {{item}}
+          </view>
+        </view>
+      </view>
+
+      <!-- 果级 -->
+      <view class="form-item">
+        <view class="form-label">果级</view>
+        <view class="options-container">
+          <view wx:for="{{gradeOptions}}" wx:key="grade"
+                class="option-item {{editForm.grade === item ? 'selected' : ''}}"
+                data-field="grade"
+                data-value="{{item}}"
+                bindtap="onEditOptionSelect">
+            {{item}}
+          </view>
+        </view>
+      </view>
+
+      <!-- 单价 -->
+      <view class="form-item">
+        <view class="form-label">单价</view>
+        <input class="input"
+               type="digit"
+               value="{{editForm.unitPrice}}"
+               data-field="unitPrice"
+               bindinput="onEditFieldInput" />
+      </view>
+
+      <!-- 运费 -->
+      <view class="form-item">
+        <view class="form-label">运费</view>
+        <input class="input"
+               type="digit"
+               value="{{editForm.freight}}"
+               data-field="freight"
+               bindinput="onEditFieldInput" />
+      </view>
+
+      <!-- 搬运 -->
+      <view class="form-item">
+        <view class="form-label">搬运</view>
+        <input class="input"
+               type="digit"
+               value="{{editForm.handlingFee}}"
+               data-field="handlingFee"
+               bindinput="onEditFieldInput" />
+      </view>
+
+      <!-- 代办 -->
+      <view class="form-item">
+        <view class="form-label">代办</view>
+        <input class="input"
+               type="digit"
+               value="{{editForm.agencyFee}}"
+               data-field="agencyFee"
+               bindinput="onEditFieldInput" />
+      </view>
+
+      <!-- 出筐 -->
+      <view class="form-item">
+        <view class="form-label">出筐</view>
+        <input class="input"
+               type="digit"
+               value="{{editForm.outBasket}}"
+               data-field="outBasket"
+               bindinput="onEditFieldInput" />
+      </view>
+
+      <!-- 回筐 -->
+      <view class="form-item">
+        <view class="form-label">回筐</view>
+        <input class="input"
+               type="digit"
+               value="{{editForm.returnBasket}}"
+               data-field="returnBasket"
+               bindinput="onEditFieldInput" />
+      </view>
+
+      <!-- 送货人 -->
+      <view class="form-item">
+        <view class="form-label">送货人</view>
+        <input class="input"
+               value="{{editForm.deliverer}}"
+               data-field="deliverer"
+               bindinput="onEditFieldInput" />
+      </view>
+
+      <!-- 实收 -->
+      <view class="form-item">
+        <view class="form-label">实收</view>
+        <input class="input"
+               type="digit"
+               value="{{editForm.receivedAmount}}"
+               data-field="receivedAmount"
+               bindinput="onEditFieldInput" />
+      </view>
+
+      <!-- 收款人 -->
+      <view class="form-item">
+        <view class="form-label">收款人</view>
+        <input class="input"
+               value="{{editForm.payee}}"
+               data-field="payee"
+               bindinput="onEditFieldInput" />
+      </view>
+
+      <!-- 收款方式 -->
+      <view class="form-item">
+        <view class="form-label">收款方式</view>
+        <input class="input"
+               value="{{editForm.paymentMethod}}"
+               data-field="paymentMethod"
+               bindinput="onEditFieldInput" />
+      </view>
+
+      <!-- 备注 -->
+      <view class="form-item">
+        <view class="form-label">备注</view>
+        <textarea class="textarea"
+                  value="{{editForm.remark}}"
+                  data-field="remark"
+                  bindinput="onEditFieldInput"
+                  auto-height />
+      </view>
+    </scroll-view>
+    <view class="edit-footer">
+      <button class="cancel-btn" bindtap="closeEditModal">取消</button>
+      <button class="save-btn" bindtap="submitEdit">保存</button>
     </view>
   </view>
 </view>

@@ -6,6 +6,7 @@ Page({
   data: {
     // 记账类型：normal（普通）或 express（快递）
     billType: 'normal',
+    editId: '',
     
     // 普通类记账
     // 种类选项
@@ -14,6 +15,7 @@ Page({
     selectedTypeIndex: -1,
     customType: '',
     showCustomInput: false,
+    recorderName: '',
     
     // 数量
     quantity: 0,
@@ -27,6 +29,26 @@ Page({
     // 邮费
     postage: '',
 
+    // 客户及附加信息（非必填）
+    customer: '',
+    saleTypeOptions: ['批发', '业务', '零售'],
+    saleType: '',
+    saleTypeIndex: -1,
+    gradeOptions: ['特大', '中大', '中果', '中小', '小果', '次果', '珍珠果', '榨汁果'],
+    grade: '',
+    gradeIndex: -1,
+    unitPrice: '',
+    freight: '',
+    handlingFee: '',
+    agencyFee: '',
+    outBasket: '',
+    returnBasket: '',
+    deliverer: '',
+    receivedAmount: '',
+    payee: '',
+    paymentMethod: '',
+    remark: '',
+
     // 快递类记账
     expressInputText: '',  // 快速输入文本
     expressRecorder: '',   // 登记人
@@ -37,11 +59,19 @@ Page({
     expressQuantityGong: 0 // 贡数
   },
 
-  onLoad() {
+  onLoad(options = {}) {
     // 设置默认日期为今天
+    const userProfile = wx.getStorageSync('userProfile')
+    const recorderName = userProfile && userProfile.nickName ? userProfile.nickName : ''
+    const editId = options.id || ''
     this.setData({
-      currentDate: dateUtil.getToday()
+      currentDate: dateUtil.getToday(),
+      recorderName,
+      editId
     })
+    if (editId) {
+      this.loadRecordForEdit(editId)
+    }
   },
 
   onShow() {
@@ -49,6 +79,69 @@ Page({
     const tab = this.getTabBar && this.getTabBar()
     if (tab && typeof tab.updateSelected === 'function') {
       tab.updateSelected()
+    }
+    const userProfile = wx.getStorageSync('userProfile')
+    if (userProfile && userProfile.nickName && userProfile.nickName !== this.data.recorderName) {
+      this.setData({
+        recorderName: userProfile.nickName
+      })
+    }
+  },
+
+  /**
+   * 加载待编辑记录
+   */
+  async loadRecordForEdit(id) {
+    wx.showLoading({
+      title: '加载中...'
+    })
+    try {
+      const res = await dbUtil.getRecordById(id)
+      const data = res.data || {}
+      // 类型处理：若不在预设，使用“其他”并填充自定义
+      const inOptions = this.data.typeOptions.includes(data.type)
+      const selectedType = inOptions ? data.type : '其他'
+      const showCustomInput = !inOptions
+      const customType = !inOptions ? (data.type || '') : ''
+
+      this.setData({
+        billType: 'normal',
+        currentDate: data.date || dateUtil.getToday(),
+        selectedType,
+        selectedTypeIndex: inOptions ? this.data.typeOptions.indexOf(data.type) : this.data.typeOptions.indexOf('其他'),
+        showCustomInput,
+        customType,
+        quantity: data.quantity || 0,
+        unit: data.unit || '箱',
+        unitIndex: this.data.unitOptions.indexOf(data.unit || '箱'),
+        weight: data.weight || '',
+        postage: data.postage || '',
+        recorderName: data.recorder || this.data.recorderName,
+        customer: data.customer || '',
+        saleType: data.saleType || '',
+        saleTypeIndex: data.saleType ? this.data.saleTypeOptions.indexOf(data.saleType) : -1,
+        grade: data.grade || '',
+        gradeIndex: data.grade ? this.data.gradeOptions.indexOf(data.grade) : -1,
+        unitPrice: data.unitPrice === 0 || data.unitPrice ? data.unitPrice : '',
+        freight: data.freight === 0 || data.freight ? data.freight : '',
+        handlingFee: data.handlingFee === 0 || data.handlingFee ? data.handlingFee : '',
+        agencyFee: data.agencyFee === 0 || data.agencyFee ? data.agencyFee : '',
+        outBasket: data.outBasket === 0 || data.outBasket ? data.outBasket : '',
+        returnBasket: data.returnBasket === 0 || data.returnBasket ? data.returnBasket : '',
+        deliverer: data.deliverer || '',
+        receivedAmount: data.receivedAmount === 0 || data.receivedAmount ? data.receivedAmount : '',
+        payee: data.payee || '',
+        paymentMethod: data.paymentMethod || '',
+        remark: data.remark || ''
+      })
+    } catch (err) {
+      console.error('加载记录失败', err)
+      wx.showToast({
+        title: '加载失败',
+        icon: 'none'
+      })
+    } finally {
+      wx.hideLoading()
     }
   },
 
@@ -69,11 +162,37 @@ Page({
    */
   onTypeSelect(e) {
     const type = e.currentTarget.dataset.type
+    const isSame = this.data.selectedType === type
+    const newType = isSame ? '' : type
     this.setData({
-      selectedType: type,
-      selectedTypeIndex: this.data.typeOptions.indexOf(type),
-      showCustomInput: type === '其他',
-      customType: type === '其他' ? this.data.customType : ''
+      selectedType: newType,
+      selectedTypeIndex: isSame ? -1 : this.data.typeOptions.indexOf(type),
+      showCustomInput: newType === '其他',
+      customType: newType === '其他' ? this.data.customType : ''
+    })
+  },
+
+  /**
+   * 选择销售类型
+   */
+  onSaleTypeSelect(e) {
+    const saleType = e.currentTarget.dataset.type
+    const isSame = this.data.saleType === saleType
+    this.setData({
+      saleType: isSame ? '' : saleType,
+      saleTypeIndex: isSame ? -1 : this.data.saleTypeOptions.indexOf(saleType)
+    })
+  },
+
+  /**
+   * 选择果级
+   */
+  onGradeSelect(e) {
+    const grade = e.currentTarget.dataset.type
+    const isSame = this.data.grade === grade
+    this.setData({
+      grade: isSame ? '' : grade,
+      gradeIndex: isSame ? -1 : this.data.gradeOptions.indexOf(grade)
     })
   },
 
@@ -87,13 +206,24 @@ Page({
   },
 
   /**
+   * 通用输入（文本/数字，非必填）
+   */
+  onFieldInput(e) {
+    const { field } = e.currentTarget.dataset
+    this.setData({
+      [field]: e.detail.value
+    })
+  },
+
+  /**
    * 选择单位（直接点击）
    */
   onUnitSelect(e) {
     const unit = e.currentTarget.dataset.unit
+    const isSame = this.data.unit === unit
     this.setData({
-      unit: unit,
-      unitIndex: this.data.unitOptions.indexOf(unit)
+      unit: isSame ? '' : unit,
+      unitIndex: isSame ? -1 : this.data.unitOptions.indexOf(unit)
     })
   },
 
@@ -343,39 +473,68 @@ Page({
       }
 
       // 准备数据
+      const parseOptionalNumber = (value) => {
+        if (value === '' || value === null || value === undefined) return null
+        const num = parseFloat(value)
+        return isNaN(num) ? null : num
+      }
+
       const recordData = {
         date: this.data.currentDate,
         type: type.trim(),
         quantity: this.data.quantity,
         unit: this.data.unit,
+        recorder: this.data.recorderName || '',
         weight: this.data.weight ? parseFloat(this.data.weight) : null,
-        postage: this.data.postage ? parseFloat(this.data.postage) : null
+        postage: this.data.postage ? parseFloat(this.data.postage) : null,
+        customer: this.data.customer.trim(),
+        saleType: this.data.saleType,
+        grade: this.data.grade,
+        unitPrice: parseOptionalNumber(this.data.unitPrice),
+        freight: parseOptionalNumber(this.data.freight),
+        handlingFee: parseOptionalNumber(this.data.handlingFee),
+        agencyFee: parseOptionalNumber(this.data.agencyFee),
+        outBasket: parseOptionalNumber(this.data.outBasket),
+        returnBasket: parseOptionalNumber(this.data.returnBasket),
+        deliverer: this.data.deliverer.trim(),
+        receivedAmount: parseOptionalNumber(this.data.receivedAmount),
+        payee: this.data.payee.trim(),
+        paymentMethod: this.data.paymentMethod.trim(),
+        remark: this.data.remark.trim()
       }
 
       wx.showLoading({
-        title: '保存中...'
+        title: this.data.editId ? '更新中...' : '保存中...'
       })
 
       try {
-        await dbUtil.addRecord(recordData)
+        if (this.data.editId) {
+          await dbUtil.updateRecord(this.data.editId, recordData)
+        } else {
+          await dbUtil.addRecord(recordData)
+        }
         wx.showToast({
-          title: '保存成功',
+          title: this.data.editId ? '更新成功' : '保存成功',
           icon: 'success'
         })
         
         // 重置表单
         this.resetForm()
         
-        // 延迟跳转到记账页面
+        // 返回记录列表
         setTimeout(() => {
-          wx.switchTab({
-            url: '/pages/record/record'
-          })
-        }, 1500)
+          if (this.data.editId) {
+            wx.navigateBack()
+          } else {
+            wx.switchTab({
+              url: '/pages/record/record'
+            })
+          }
+        }, 800)
       } catch (err) {
         console.error('保存失败', err)
         wx.showToast({
-          title: '保存失败',
+          title: this.data.editId ? '更新失败' : '保存失败',
           icon: 'none'
         })
       } finally {
@@ -449,13 +608,31 @@ Page({
     if (this.data.billType === 'normal') {
       // 重置普通类表单
       this.setData({
+        editId: '',
         selectedType: '',
         customType: '',
         showCustomInput: false,
         quantity: 0,
         unit: '箱',
         weight: '',
-        postage: ''
+        postage: '',
+        recorderName: this.data.recorderName,
+        customer: '',
+        saleType: '',
+        saleTypeIndex: -1,
+        grade: '',
+        gradeIndex: -1,
+        unitPrice: '',
+        freight: '',
+        handlingFee: '',
+        agencyFee: '',
+        outBasket: '',
+        returnBasket: '',
+        deliverer: '',
+        receivedAmount: '',
+        payee: '',
+        paymentMethod: '',
+        remark: ''
       })
     } else {
       // 重置快递类表单

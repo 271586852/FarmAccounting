@@ -59,6 +59,42 @@
       </view>
     </view>
 
+      <!-- 客户 -->
+      <view class="form-item">
+        <view class="form-label">客户</view>
+        <input class="text-input"
+               placeholder="请输入客户名称"
+               value="{{customer}}"
+               data-field="customer"
+               bindinput="onFieldInput" />
+      </view>
+
+      <!-- 销售类型 -->
+      <view class="form-item">
+        <view class="form-label">销售</view>
+        <view class="options-container">
+          <view wx:for="{{saleTypeOptions}}" wx:key="index"
+                class="option-item {{saleType === item ? 'selected' : ''}}"
+                data-type="{{item}}"
+                bindtap="onSaleTypeSelect">
+            {{item}}
+          </view>
+        </view>
+      </view>
+
+      <!-- 果级 -->
+      <view class="form-item">
+        <view class="form-label">果级</view>
+        <view class="options-container">
+          <view wx:for="{{gradeOptions}}" wx:key="index"
+                class="option-item {{grade === item ? 'selected' : ''}}"
+                data-type="{{item}}"
+                bindtap="onGradeSelect">
+            {{item}}
+          </view>
+        </view>
+      </view>
+
     <!-- 第三行：重量 -->
     <view class="form-item">
       <view class="form-label">重量</view>
@@ -85,6 +121,144 @@
                  bindinput="onPostageInput" />
           <text class="unit-text">元</text>
         </view>
+      </view>
+
+      <!-- 单价 -->
+      <view class="form-item">
+        <view class="form-label">单价</view>
+        <view class="postage-input-group">
+          <input class="postage-input"
+                 type="digit"
+                 placeholder="0"
+                 value="{{unitPrice}}"
+                 data-field="unitPrice"
+                 bindinput="onFieldInput" />
+          <text class="unit-text">元</text>
+        </view>
+      </view>
+
+      <!-- 运费 -->
+      <view class="form-item">
+        <view class="form-label">运费</view>
+        <view class="postage-input-group">
+          <input class="postage-input"
+                 type="digit"
+                 placeholder="0"
+                 value="{{freight}}"
+                 data-field="freight"
+                 bindinput="onFieldInput" />
+          <text class="unit-text">元</text>
+        </view>
+      </view>
+
+      <!-- 搬运 -->
+      <view class="form-item">
+        <view class="form-label">搬运</view>
+        <view class="postage-input-group">
+          <input class="postage-input"
+                 type="digit"
+                 placeholder="0"
+                 value="{{handlingFee}}"
+                 data-field="handlingFee"
+                 bindinput="onFieldInput" />
+          <text class="unit-text">元</text>
+        </view>
+      </view>
+
+      <!-- 代办 -->
+      <view class="form-item">
+        <view class="form-label">代办</view>
+        <view class="postage-input-group">
+          <input class="postage-input"
+                 type="digit"
+                 placeholder="0"
+                 value="{{agencyFee}}"
+                 data-field="agencyFee"
+                 bindinput="onFieldInput" />
+          <text class="unit-text">元</text>
+        </view>
+      </view>
+
+      <!-- 出筐 -->
+      <view class="form-item">
+        <view class="form-label">出筐</view>
+        <view class="postage-input-group">
+          <input class="postage-input"
+                 type="digit"
+                 placeholder="0"
+                 value="{{outBasket}}"
+                 data-field="outBasket"
+                 bindinput="onFieldInput" />
+          <text class="unit-text">筐</text>
+        </view>
+      </view>
+
+      <!-- 回筐 -->
+      <view class="form-item">
+        <view class="form-label">回筐</view>
+        <view class="postage-input-group">
+          <input class="postage-input"
+                 type="digit"
+                 placeholder="0"
+                 value="{{returnBasket}}"
+                 data-field="returnBasket"
+                 bindinput="onFieldInput" />
+          <text class="unit-text">筐</text>
+        </view>
+      </view>
+
+      <!-- 送货人 -->
+      <view class="form-item">
+        <view class="form-label">送货人</view>
+        <input class="text-input"
+               placeholder="请输入送货人"
+               value="{{deliverer}}"
+               data-field="deliverer"
+               bindinput="onFieldInput" />
+      </view>
+
+      <!-- 实收 -->
+      <view class="form-item">
+        <view class="form-label">实收</view>
+        <view class="postage-input-group">
+          <input class="postage-input"
+                 type="digit"
+                 placeholder="0"
+                 value="{{receivedAmount}}"
+                 data-field="receivedAmount"
+                 bindinput="onFieldInput" />
+          <text class="unit-text">元</text>
+        </view>
+      </view>
+
+      <!-- 收款人 -->
+      <view class="form-item">
+        <view class="form-label">收款人</view>
+        <input class="text-input"
+               placeholder="请输入收款人"
+               value="{{payee}}"
+               data-field="payee"
+               bindinput="onFieldInput" />
+      </view>
+
+      <!-- 收款方式 -->
+      <view class="form-item">
+        <view class="form-label">收款方式</view>
+        <input class="text-input"
+               placeholder="请输入收款方式"
+               value="{{paymentMethod}}"
+               data-field="paymentMethod"
+               bindinput="onFieldInput" />
+      </view>
+
+      <!-- 备注 -->
+      <view class="form-item">
+        <view class="form-label">备注</view>
+        <textarea class="remark-textarea"
+                  placeholder="请输入备注"
+                  value="{{remark}}"
+                  data-field="remark"
+                  bindinput="onFieldInput" />
       </view>
     </block>
 
@@ -172,7 +346,9 @@
       </view>
     </block>
 
-    <!-- 提交按钮 -->
-    <button class="submit-btn" bindtap="submitForm">保存</button>
+    <!-- 提交按钮（固定底部） -->
+    <view class="submit-wrapper">
+      <button class="submit-btn" bindtap="submitForm">保存</button>
+    </view>
   </view>
 </view>

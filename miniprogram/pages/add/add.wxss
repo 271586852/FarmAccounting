@@ -2,7 +2,7 @@
   min-height: 100vh;
   background-color: #f5f5f5;
   padding: 20rpx;
-  padding-bottom: 120rpx;
+  padding-bottom: 300rpx; /* 预留底部悬浮按钮与凸起+号空间 */
 }
 
 .form-container {
@@ -137,16 +137,30 @@
 }
 
 .submit-btn {
-  margin-top: 60rpx;
+  width: 100%;
+  max-width: 420rpx;
+  height: 96rpx;
+  line-height: 96rpx;
   background-color: #1aad19;
   color: #fff;
-  border-radius: 8rpx;
+  border-radius: 999rpx; /* 半圆弧形 */
   font-size: 32rpx;
-  padding: 24rpx;
+  padding: 0;
+  box-shadow: 0 8rpx 24rpx rgba(26, 173, 25, 0.35);
 }
 
 .submit-btn::after {
   border: none;
+}
+
+.submit-wrapper {
+  position: fixed;
+  left: 20rpx;
+  right: 20rpx;
+  bottom: 200rpx; /* 高于底部自定义tab的凸起+号 */
+  z-index: 10;
+  display: flex;
+  justify-content: center;
 }
 
 /* 快递类记账样式 */
@@ -200,6 +214,31 @@
   font-size: 28rpx;
   color: #000;
   box-sizing: border-box;
+  border: 2rpx solid #e0e0e0;
+}
+
+/* 普通类新增字段 */
+.text-input {
+  width: 100%;
+  min-height: 80rpx;
+  padding: 20rpx;
+  background-color: #f8f8f8;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  color: #000;
+  box-sizing: border-box;
+}
+
+.remark-textarea {
+  width: 100%;
+  min-height: 140rpx;
+  padding: 20rpx;
+  background-color: #f8f8f8;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  color: #000;
+  box-sizing: border-box;
+  line-height: 1.6;
   border: 2rpx solid #e0e0e0;
 }
 

@@ -2,6 +2,11 @@
   min-height: 100vh;
   background-color: #f5f5f5;
   padding-bottom: 120rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* 用户信息区域 */
@@ -73,7 +78,7 @@
 
 .menu-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   padding: 30rpx;
   border-bottom: 1rpx solid #f0f0f0;
   transition: background-color 0.3s;
@@ -88,10 +93,31 @@
 }
 
 .menu-icon {
-  font-size: 40rpx;
+  width: 48rpx;
+  height: 48rpx;
   margin-right: 20rpx;
-  width: 50rpx;
-  text-align: center;
+  border: 2rpx solid #1aad19;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1aad19;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+
+.menu-icon::after {
+  content: '';
+  font-weight: 700;
+}
+
+.about-icon::after {
+  content: 'i';
+}
+
+.cache-icon::after {
+  content: '↺';
+  font-size: 30rpx;
 }
 
 .menu-text {

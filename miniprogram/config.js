@@ -5,6 +5,8 @@
 const host = '14592619.qcloud.la'
 
 const config = {
+  // 应用版本号（统一配置）
+  version: '1.1.0',
   // 测试的请求地址，用于测试会话
   requestUrl: 'https://mp.weixin.qq.com',
   host,

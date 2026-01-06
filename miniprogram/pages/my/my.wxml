@@ -11,8 +11,8 @@
     <view wx:else class="user-info">
       <image class="avatar default-avatar" src="/image/record.png" mode="aspectFit"></image>
       <view class="user-details">
-        <button class="auth-btn" open-type="getUserInfo" bindgetuserinfo="getUserInfo">
-          点击授权登录
+        <button class="auth-btn" hover-class="none" bindtap="requestProfile">
+          获取头像与昵称
         </button>
       </view>
     </view>
@@ -21,12 +21,12 @@
   <!-- 功能列表 -->
   <view class="menu-section">
     <view class="menu-item" bindtap="onAbout">
-      <view class="menu-icon">ℹ️</view>
+      <view class="menu-icon about-icon"></view>
       <text class="menu-text">关于</text>
       <text class="menu-arrow">></text>
     </view>
     <view class="menu-item" bindtap="onClearCache">
-      <view class="menu-icon">🗑️</view>
+      <view class="menu-icon cache-icon"></view>
       <text class="menu-text">清除缓存</text>
       <text class="menu-arrow">></text>
     </view>
@@ -34,7 +34,7 @@
 
   <!-- 版本信息 -->
   <view class="version-info">
-    <text>版本 1.0.0</text>
+    <text>版本 {{version}}</text>
   </view>
 </view>
 

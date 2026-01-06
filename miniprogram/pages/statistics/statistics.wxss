@@ -75,8 +75,11 @@
 .date-picker {
   display: flex;
   align-items: center;
-  gap: 10rpx;
+  justify-content: space-between;
+  width: 100%;
+  gap: 0;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .date-text {

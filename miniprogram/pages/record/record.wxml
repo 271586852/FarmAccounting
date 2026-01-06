@@ -1,7 +1,7 @@
 <view class="container">
   <!-- 日期选择区域 -->
   <view class="date-header">
-    <view class="date-picker" bindtap="showCalendar">
+    <view class="date-picker" bindtap="showCalendar" hover-class="none">
       <text class="date-text">{{dateDisplay}}</text>
       <image class="date-icon" src="../../image/calendar.png" mode="aspectFit"></image>
     </view>

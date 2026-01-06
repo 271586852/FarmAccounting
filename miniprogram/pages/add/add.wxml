@@ -70,10 +70,5 @@
 
     <!-- 提交按钮 -->
     <button class="submit-btn" bindtap="submitForm">保存</button>
-    
-    <!-- 配置检查提示 -->
-    <view class="config-tip" bindtap="checkConfig">
-      <text>💡 如果保存失败，点击这里检查配置</text>
-    </view>
   </view>
 </view>

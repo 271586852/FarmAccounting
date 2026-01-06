@@ -4,7 +4,7 @@ const dateUtil = require('../../util/date')
 Page({
   data: {
     // 种类选项
-    typeOptions: ['沙糖桔', '贡柑', '茶油', '蜜桔', '其他'],
+    typeOptions: ['沙糖桔', '贡柑', '茶油', '其他'],
     selectedType: '',
     selectedTypeIndex: -1,
     customType: '',
@@ -194,23 +194,6 @@ Page({
       }, 1500)
     } catch (err) {
       console.error('保存失败', err)
-      let errorMsg = '保存失败'
-      if (err.errMsg) {
-        if (err.errMsg.includes('permission')) {
-          errorMsg = '保存失败：权限不足，请检查数据库权限设置'
-        } else if (err.errMsg.includes('collection')) {
-          errorMsg = '保存失败：数据库集合不存在，请先创建 records 集合'
-        } else if (err.errMsg.includes('env')) {
-          errorMsg = '保存失败：云开发环境未配置，请检查 config.js'
-        } else {
-          errorMsg = `保存失败：${err.errMsg}`
-        }
-      }
-      wx.showModal({
-        title: '错误',
-        content: errorMsg + '\n\n请查看控制台获取详细信息',
-        showCancel: false
-      })
     } finally {
       wx.hideLoading()
     }
@@ -231,56 +214,5 @@ Page({
     })
   },
 
-  /**
-   * 检查配置
-   */
-  async checkConfig() {
-    wx.showLoading({
-      title: '检查中...'
-    })
-    
-    const config = require('../../config')
-    const checks = []
-    
-    // 检查1: 云开发环境ID
-    if (!config.envId || config.envId === 'release-b86096') {
-      checks.push('❌ 云开发环境ID未配置或使用默认值，请在 config.js 中配置正确的 envId')
-    } else {
-      checks.push(`✅ 云开发环境ID: ${config.envId}`)
-    }
-    
-    // 检查2: 云开发是否初始化
-    if (!wx.cloud) {
-      checks.push('❌ 云开发未初始化，请确保基础库版本 >= 2.2.3')
-    } else {
-      checks.push('✅ 云开发已初始化')
-    }
-    
-    // 检查3: 数据库连接测试
-    try {
-      const db = wx.cloud.database()
-      await db.collection('records').limit(1).get()
-      checks.push('✅ 数据库连接成功，records 集合存在')
-    } catch (err) {
-      if (err.errMsg.includes('permission')) {
-        checks.push('❌ 数据库权限不足，请在云开发控制台设置 records 集合权限')
-      } else if (err.errMsg.includes('collection')) {
-        checks.push('❌ records 集合不存在，请在云开发控制台创建该集合')
-      } else if (err.errMsg.includes('env')) {
-        checks.push('❌ 云开发环境ID错误，请检查 config.js 中的 envId')
-      } else {
-        checks.push(`❌ 数据库连接失败: ${err.errMsg}`)
-      }
-    }
-    
-    wx.hideLoading()
-    
-    wx.showModal({
-      title: '配置检查结果',
-      content: checks.join('\n\n'),
-      showCancel: false,
-      confirmText: '知道了'
-    })
-  }
 })
 

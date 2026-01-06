@@ -90,6 +90,7 @@
   border-radius: 8rpx;
   text-align: center;
   font-size: 28rpx;
+  color: #000;
 }
 
 .unit-options {
@@ -132,6 +133,7 @@
   background-color: #f8f8f8;
   border-radius: 8rpx;
   font-size: 28rpx;
+  color: #000;
 }
 
 .submit-btn {
@@ -145,15 +147,5 @@
 
 .submit-btn::after {
   border: none;
-}
-
-.config-tip {
-  margin-top: 30rpx;
-  padding: 20rpx;
-  background-color: #fff3cd;
-  border-radius: 8rpx;
-  text-align: center;
-  font-size: 24rpx;
-  color: #856404;
 }
 

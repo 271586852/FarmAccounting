@@ -24,15 +24,12 @@ Page({
   },
 
   onLoad() {
-    // 检查是否已登录
-    const isLoggedIn = wx.getStorageSync('adminLoggedIn') || false
-    if (isLoggedIn) {
-      this.setData({
-        isLoggedIn: true,
-        dateDisplay: dateUtil.formatDateDisplay(this.data.currentDate)
-      })
-      this.loadStatistics()
-    }
+    // 暂时取消登录认证，直接加载统计数据
+    this.setData({
+      isLoggedIn: true,
+      dateDisplay: dateUtil.formatDateDisplay(this.data.currentDate)
+    })
+    this.loadStatistics()
   },
 
   /**

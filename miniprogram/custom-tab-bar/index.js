@@ -1,6 +1,6 @@
 Component({
   data: {
-    selected: 0,
+    selected: 1, // 默认选中"添加"页面（索引1）
     color: "#7A7E83",
     selectedColor: "#1aad19",
     list: [
@@ -34,7 +34,12 @@ Component({
       if (pages.length === 0) return
       const currentPage = pages[pages.length - 1]
       const url = currentPage.route
-      const index = this.data.list.findIndex(item => item.pagePath === `/${url}`)
+      // 确保路径格式一致：去掉开头的斜杠，添加开头的斜杠
+      const currentPath = url.startsWith('/') ? url : `/${url}`
+      const index = this.data.list.findIndex(item => {
+        const itemPath = item.pagePath.startsWith('/') ? item.pagePath : `/${item.pagePath}`
+        return itemPath === currentPath
+      })
       if (index !== -1) {
         this.setData({
           selected: index
@@ -46,12 +51,22 @@ Component({
       const url = data.path
       const index = data.index
       
-      wx.switchTab({
-        url: url
-      })
-      
+      // 先更新选中状态，确保UI立即响应
       this.setData({
         selected: index
+      })
+      
+      // 然后切换页面，页面切换后会通过 pageLifetimes.show 再次确认状态
+      wx.switchTab({
+        url: url,
+        success: () => {
+          // 切换成功后再次确认选中状态
+          this.updateSelected()
+        },
+        fail: () => {
+          // 如果切换失败，恢复之前的状态
+          this.updateSelected()
+        }
       })
     }
   }

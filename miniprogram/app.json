@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/record/record",
     "pages/add/add",
+    "pages/record/record",
     "pages/statistics/statistics"
   ],
   "window": {

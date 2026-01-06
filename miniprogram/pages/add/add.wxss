@@ -149,3 +149,57 @@
   border: none;
 }
 
+/* 快递类记账样式 */
+.tip-text {
+  font-size: 24rpx;
+  color: #999;
+  font-weight: normal;
+}
+
+.express-textarea {
+  width: 100%;
+  min-height: 150rpx;
+  padding: 20rpx;
+  background-color: #f8f8f8;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  line-height: 1.6;
+  box-sizing: border-box;
+  border: 2rpx solid #e0e0e0;
+}
+
+.address-textarea {
+  min-height: 120rpx;
+}
+
+.parse-btn-wrapper {
+  margin-top: 20rpx;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.parse-btn {
+  padding: 12rpx 40rpx;
+  background-color: #1aad19;
+  color: #fff;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  border: none;
+}
+
+.parse-btn::after {
+  border: none;
+}
+
+.express-input {
+  width: 100%;
+  min-height: 80rpx;
+  padding: 20rpx;
+  background-color: #f8f8f8;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  color: #000;
+  box-sizing: border-box;
+  border: 2rpx solid #e0e0e0;
+}
+

@@ -186,7 +186,7 @@
 /* 添加按钮 */
 .add-btn-wrapper {
   position: fixed;
-  bottom: 140rpx;
+  bottom: 200rpx;
   left: 0;
   right: 0;
   padding: 20rpx;

@@ -68,7 +68,7 @@
 
   <!-- 添加按钮 -->
   <view class="add-btn-wrapper">
-    <button class="add-btn" bindtap="showAddModal">添加快递</button>
+    <button class="add-btn" bindtap="showAddModal">接龙解析</button>
   </view>
 
   <!-- 添加弹窗 -->

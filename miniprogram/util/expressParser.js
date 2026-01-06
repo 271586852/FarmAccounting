@@ -263,7 +263,24 @@ function parseLine(line) {
     phone = phoneMatch[1]
     const phoneIndex = content.indexOf(phone)
     const beforePhone = content.substring(0, phoneIndex).trim()
-    const afterPhone = content.substring(phoneIndex + 11).trim()
+    let afterPhone = content.substring(phoneIndex + 11).trim()
+
+    // 处理手机号后面的内容：可能是登记人（1-3个中文字符）
+    // 移除括号内容（数量信息）后再检查
+    afterPhone = afterPhone.replace(/[（(][^）)]+[）)]/, '').trim()
+    if (afterPhone && /^[\u4e00-\u9fa5]{1,3}$/.test(afterPhone)) {
+      // 如果手机号后面是1-3个中文字符，且不是地址关键词，作为登记人
+      if (!/[省市区县街道路号]/g.test(afterPhone)) {
+        // 如果 recorder 为空，或者 recorder 与 afterPhone 不同，则使用 afterPhone 作为 recorder
+        if (!recorder || recorder !== afterPhone) {
+          // 如果 recorder 已存在且不同，保留 recorder，将 afterPhone 作为备注
+          // 如果 recorder 为空，则使用 afterPhone 作为 recorder
+          if (!recorder) {
+            recorder = afterPhone
+          }
+        }
+      }
+    }
 
     // 移除开头的序号（如 "1、"、"2、"）
     let cleanBeforePhone = beforePhone.replace(/^\d+[、.]/, '').trim()

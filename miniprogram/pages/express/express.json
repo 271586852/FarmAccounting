@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "calendar": "../../components/calendar/calendar"
+  },
+  "navigationBarTitleText": "快递记录",
+  "enablePullDownRefresh": true
+}
+

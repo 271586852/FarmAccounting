@@ -68,11 +68,64 @@ function getRecordsByDateRange(startDate, endDate) {
     .get()
 }
 
+/**
+ * 添加快递记录
+ */
+function addExpressRecord(data) {
+  return db.collection('express').add({
+    data: {
+      ...data,
+      createTime: db.serverDate(),
+      updateTime: db.serverDate()
+    }
+  })
+}
+
+/**
+ * 批量添加快递记录（循环调用单个添加）
+ */
+function addExpressRecords(records) {
+  const promises = records.map(record => addExpressRecord(record))
+  return Promise.all(promises)
+}
+
+/**
+ * 根据日期查询快递记录
+ */
+function getExpressRecordsByDate(date) {
+  return db.collection('express')
+    .where({
+      date: date
+    })
+    .get()
+    .then(res => {
+      // 手动排序，按创建时间倒序排列
+      res.data.sort((a, b) => {
+        if (a.createTime && b.createTime) {
+          return new Date(b.createTime) - new Date(a.createTime)
+        }
+        return 0
+      })
+      return res
+    })
+}
+
+/**
+ * 删除快递记录
+ */
+function deleteExpressRecord(id) {
+  return db.collection('express').doc(id).remove()
+}
+
 module.exports = {
   addRecord,
   getRecordsByDate,
   deleteRecord,
   getAllRecords,
-  getRecordsByDateRange
+  getRecordsByDateRange,
+  addExpressRecord,
+  addExpressRecords,
+  getExpressRecordsByDate,
+  deleteExpressRecord
 }
 

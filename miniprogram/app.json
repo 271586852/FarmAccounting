@@ -2,7 +2,9 @@
   "pages": [
     "pages/add/add",
     "pages/record/record",
-    "pages/statistics/statistics"
+    "pages/express/express",
+    "pages/statistics/statistics",
+    "pages/my/my"
   ],
   "window": {
     "navigationBarTextStyle": "black",
@@ -22,12 +24,20 @@
         "text": "记账"
       },
       {
+        "pagePath": "pages/express/express",
+        "text": "快递"
+      },
+      {
         "pagePath": "pages/add/add",
         "text": "添加"
       },
       {
         "pagePath": "pages/statistics/statistics",
         "text": "统计"
+      },
+      {
+        "pagePath": "pages/my/my",
+        "text": "我的"
       }
     ]
   },

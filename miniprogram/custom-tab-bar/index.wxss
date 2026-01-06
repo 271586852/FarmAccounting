@@ -63,6 +63,10 @@
   height: 100%;
 }
 
+.icon-text {
+  font-size: 40rpx;
+}
+
 .tab-text {
   font-size: 20rpx;
 }

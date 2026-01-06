@@ -1,0 +1,101 @@
+<view class="container">
+  <!-- 日期选择区域 -->
+  <view class="date-header">
+    <view class="date-picker" bindtap="showCalendar">
+      <text class="date-text">{{dateDisplay}}</text>
+      <image class="date-icon" src="../../image/calendar.png" mode="aspectFit"></image>
+    </view>
+  </view>
+  
+  <!-- 日历组件 -->
+  <calendar selectedDate="{{currentDate}}" show="{{showCalendar}}" bindselect="onDateSelect" bindclose="hideCalendar"></calendar>
+
+  <!-- 统计信息 -->
+  <view class="statistics-bar">
+    <view class="stat-item">
+      <text class="stat-label">总桔数：</text>
+      <text class="stat-value">{{statistics.totalJu}}</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-label">总贡数：</text>
+      <text class="stat-value">{{statistics.totalGong}}</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-label">记录数：</text>
+      <text class="stat-value">{{statistics.totalCount}}</text>
+    </view>
+  </view>
+
+  <!-- 记录列表 -->
+  <view class="records-list">
+    <view wx:if="{{records.length === 0}}" class="empty-tip">
+      暂无记录
+    </view>
+    <view wx:for="{{records}}" wx:key="_id" class="record-item">
+      <view class="record-content">
+        <view class="record-header">
+          <view class="recorder-name">{{item.recorder}}</view>
+          <view class="record-time">{{item.createTimeDisplay}}</view>
+        </view>
+        <view class="record-details">
+          <view class="detail-row" wx:if="{{item.recipient}}">
+            <text class="detail-label">收件人：</text>
+            <text class="detail-value">{{item.recipient}}</text>
+          </view>
+          <view class="detail-row" wx:if="{{item.phone}}">
+            <text class="detail-label">电话：</text>
+            <text class="detail-value">{{item.phone}}</text>
+          </view>
+          <view class="detail-row" wx:if="{{item.address}}">
+            <text class="detail-label">地址：</text>
+            <text class="detail-value address-text">{{item.address}}</text>
+          </view>
+          <view class="detail-row" wx:if="{{item.remark}}">
+            <text class="detail-label">备注：</text>
+            <text class="detail-value remark-text">{{item.remark}}</text>
+          </view>
+          <view class="detail-row quantity-row">
+            <text class="quantity-item" wx:if="{{item.quantityJu > 0}}">{{item.quantityJu}}桔</text>
+            <text class="quantity-item" wx:if="{{item.quantityGong > 0}}">{{item.quantityGong}}贡</text>
+          </view>
+        </view>
+      </view>
+      <view class="delete-btn" data-id="{{item._id}}" data-index="{{index}}" bindtap="deleteRecord">
+        <image class="delete-icon" src="../../image/delete.png" mode="aspectFit"></image>
+      </view>
+    </view>
+  </view>
+
+  <!-- 添加按钮 -->
+  <view class="add-btn-wrapper">
+    <button class="add-btn" bindtap="showAddModal">添加快递</button>
+  </view>
+
+  <!-- 添加弹窗 -->
+  <view wx:if="{{showAddModal}}" class="modal-mask" bindtap="hideAddModal">
+    <view class="modal-content" catchtap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">粘贴接龙内容</text>
+        <view class="modal-close" bindtap="hideAddModal">×</view>
+      </view>
+      <view class="modal-body">
+        <textarea 
+          class="paste-textarea" 
+          placeholder="请粘贴接龙内容，系统将自动解析..."
+          value="{{pasteContent}}"
+          bindinput="onPasteInput"
+          auto-height
+          maxlength="5000"
+        ></textarea>
+        <view class="modal-tip">
+          <text>💡 提示：支持接龙格式，系统会自动解析记录人、地址、收件人、电话、数量等信息</text>
+        </view>
+      </view>
+      <view class="modal-footer">
+        <button class="modal-btn cancel-btn" bindtap="hideAddModal">取消</button>
+        <button class="modal-btn confirm-btn" bindtap="parseAndSave">解析并保存</button>
+      </view>
+    </view>
+  </view>
+</view>
+

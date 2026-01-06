@@ -9,6 +9,10 @@ Component({
         text: "记账"
       },
       {
+        pagePath: "/pages/express/express",
+        text: "快递"
+      },
+      {
         pagePath: "/pages/add/add",
         text: "添加",
         isSpecial: true
@@ -16,6 +20,10 @@ Component({
       {
         pagePath: "/pages/statistics/statistics",
         text: "统计"
+      },
+      {
+        pagePath: "/pages/my/my",
+        text: "我的"
       }
     ]
   },

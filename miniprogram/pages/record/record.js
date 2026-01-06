@@ -19,6 +19,11 @@ Page({
   onShow() {
     // 每次显示页面时刷新数据
     this.loadRecords()
+    // 确保自定义 tab 高亮正确
+    const tab = this.getTabBar && this.getTabBar()
+    if (tab && typeof tab.updateSelected === 'function') {
+      tab.updateSelected()
+    }
   },
 
   /**

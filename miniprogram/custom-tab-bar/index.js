@@ -1,6 +1,7 @@
 Component({
   data: {
-    selected: 1, // 默认选中"添加"页面（索引1）
+    // 当前选中的 tab 索引
+    selected: 0,
     color: "#7A7E83",
     selectedColor: "#1aad19",
     list: [

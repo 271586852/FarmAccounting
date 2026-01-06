@@ -44,6 +44,14 @@ Page({
     })
   },
 
+  onShow() {
+    // 确保自定义 tab 高亮正确
+    const tab = this.getTabBar && this.getTabBar()
+    if (tab && typeof tab.updateSelected === 'function') {
+      tab.updateSelected()
+    }
+  },
+
   /**
    * 选择记账类型（普通/快递）
    */

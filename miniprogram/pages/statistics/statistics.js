@@ -32,6 +32,14 @@ Page({
     this.loadStatistics()
   },
 
+  onShow() {
+    // 确保自定义 tab 高亮正确
+    const tab = this.getTabBar && this.getTabBar()
+    if (tab && typeof tab.updateSelected === 'function') {
+      tab.updateSelected()
+    }
+  },
+
   /**
    * 用户名输入
    */

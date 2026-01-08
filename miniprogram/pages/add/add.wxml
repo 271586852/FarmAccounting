@@ -40,7 +40,7 @@
 
     <!-- 第二行：数量 -->
     <view class="form-item">
-      <view class="form-label">数量 <text class="required">*</text></view>
+      <view class="form-label">数量</view>
       <view class="number-input-group">
         <view class="number-btn" bindtap="decreaseQuantity">-</view>
         <input class="number-input" 
@@ -56,6 +56,21 @@
             {{item}}
           </view>
         </view>
+      </view>
+    </view>
+
+      <!-- 第三行：重量 -->
+      <view class="form-item">
+      <view class="form-label">重量</view>
+      <view class="number-input-group">
+        <view class="number-btn" bindtap="decreaseWeight">-</view>
+        <input class="number-input" 
+               type="digit" 
+               value="{{weight}}" 
+               placeholder="0"
+               bindinput="onWeightInput" />
+        <view class="number-btn" bindtap="increaseWeight">+</view>
+        <text class="unit-text">市斤</text>
       </view>
     </view>
 
@@ -95,20 +110,6 @@
         </view>
       </view>
 
-    <!-- 第三行：重量 -->
-    <view class="form-item">
-      <view class="form-label">重量</view>
-      <view class="number-input-group">
-        <view class="number-btn" bindtap="decreaseWeight">-</view>
-        <input class="number-input" 
-               type="digit" 
-               value="{{weight}}" 
-               placeholder="0"
-               bindinput="onWeightInput" />
-        <view class="number-btn" bindtap="increaseWeight">+</view>
-        <text class="unit-text">市斤</text>
-      </view>
-    </view>
 
       <!-- 第四行：邮费 -->
       <view class="form-item">
@@ -117,7 +118,7 @@
           <input class="postage-input" 
                  type="digit" 
                  value="{{postage}}" 
-                 placeholder="0"
+                 placeholder="请输入"
                  bindinput="onPostageInput" />
           <text class="unit-text">元</text>
         </view>
@@ -129,7 +130,7 @@
         <view class="postage-input-group">
           <input class="postage-input"
                  type="digit"
-                 placeholder="0"
+                 placeholder="请输入"
                  value="{{unitPrice}}"
                  data-field="unitPrice"
                  bindinput="onFieldInput" />
@@ -143,7 +144,7 @@
         <view class="postage-input-group">
           <input class="postage-input"
                  type="digit"
-                 placeholder="0"
+                 placeholder="请输入"
                  value="{{freight}}"
                  data-field="freight"
                  bindinput="onFieldInput" />
@@ -157,7 +158,7 @@
         <view class="postage-input-group">
           <input class="postage-input"
                  type="digit"
-                 placeholder="0"
+                 placeholder="请输入"
                  value="{{handlingFee}}"
                  data-field="handlingFee"
                  bindinput="onFieldInput" />
@@ -171,7 +172,7 @@
         <view class="postage-input-group">
           <input class="postage-input"
                  type="digit"
-                 placeholder="0"
+                 placeholder="请输入"
                  value="{{agencyFee}}"
                  data-field="agencyFee"
                  bindinput="onFieldInput" />
@@ -185,7 +186,7 @@
         <view class="postage-input-group">
           <input class="postage-input"
                  type="digit"
-                 placeholder="0"
+                 placeholder="请输入"
                  value="{{outBasket}}"
                  data-field="outBasket"
                  bindinput="onFieldInput" />
@@ -199,7 +200,7 @@
         <view class="postage-input-group">
           <input class="postage-input"
                  type="digit"
-                 placeholder="0"
+                 placeholder="请输入"
                  value="{{returnBasket}}"
                  data-field="returnBasket"
                  bindinput="onFieldInput" />
@@ -223,7 +224,7 @@
         <view class="postage-input-group">
           <input class="postage-input"
                  type="digit"
-                 placeholder="0"
+                 placeholder="请输入"
                  value="{{receivedAmount}}"
                  data-field="receivedAmount"
                  bindinput="onFieldInput" />
@@ -268,7 +269,7 @@
       <view class="form-item">
         <view class="form-label">快速输入 <text class="tip-text">（支持自动解析）</text></view>
         <textarea class="express-textarea" 
-                  placeholder="请输入或粘贴快递信息，例如：Sunny 吉林省蛟河市，前进乡  候女士  15948469793（5桔）王"
+                  placeholder="请输入或粘贴快递信息，例如：张三 广东省肇庆市四会市江谷镇清平村704  陈四  1594xxxx（5桔1贡）王五"
                   value="{{expressInputText}}"
                   bindinput="onExpressInput"
                   auto-height

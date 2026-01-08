@@ -17,8 +17,8 @@ Page({
     showCustomInput: false,
     recorderName: '',
     
-    // 数量
-    quantity: 0,
+    // 数量（可选）
+    quantity: '',
     unit: '箱',
     unitOptions: ['箱', '筐', '袋'],
     unitIndex: 0,
@@ -111,7 +111,7 @@ Page({
         selectedTypeIndex: inOptions ? this.data.typeOptions.indexOf(data.type) : this.data.typeOptions.indexOf('其他'),
         showCustomInput,
         customType,
-        quantity: data.quantity || 0,
+        quantity: data.quantity === 0 || data.quantity ? data.quantity : '',
         unit: data.unit || '箱',
         unitIndex: this.data.unitOptions.indexOf(data.unit || '箱'),
         weight: data.weight || '',
@@ -231,9 +231,10 @@ Page({
    * 数量减
    */
   decreaseQuantity() {
-    if (this.data.quantity > 0) {
+    const current = parseInt(this.data.quantity) || 0
+    if (current > 0) {
       this.setData({
-        quantity: this.data.quantity - 1
+        quantity: current - 1
       })
     }
   },
@@ -242,8 +243,9 @@ Page({
    * 数量加
    */
   increaseQuantity() {
+    const current = parseInt(this.data.quantity) || 0
     this.setData({
-      quantity: this.data.quantity + 1
+      quantity: current + 1
     })
   },
 
@@ -251,10 +253,20 @@ Page({
    * 数量输入
    */
   onQuantityInput(e) {
-    let value = parseInt(e.detail.value) || 0
-    if (value < 0) value = 0
+    const raw = e.detail.value
+    if (raw === '') {
+      this.setData({
+        quantity: ''
+      })
+      return
+    }
+
+    let value = parseInt(raw)
+    if (isNaN(value) || value < 0) {
+      value = ''
+    }
     this.setData({
-      quantity: value
+      quantity: value === '' ? '' : value
     })
   },
 
@@ -464,14 +476,6 @@ Page({
         return
       }
 
-      if (this.data.quantity <= 0) {
-        wx.showToast({
-          title: '请输入数量',
-          icon: 'none'
-        })
-        return
-      }
-
       // 准备数据
       const parseOptionalNumber = (value) => {
         if (value === '' || value === null || value === undefined) return null
@@ -482,7 +486,7 @@ Page({
       const recordData = {
         date: this.data.currentDate,
         type: type.trim(),
-        quantity: this.data.quantity,
+        quantity: parseOptionalNumber(this.data.quantity),
         unit: this.data.unit,
         recorder: this.data.recorderName || '',
         weight: this.data.weight ? parseFloat(this.data.weight) : null,
@@ -612,7 +616,7 @@ Page({
         selectedType: '',
         customType: '',
         showCustomInput: false,
-        quantity: 0,
+        quantity: '',
         unit: '箱',
         weight: '',
         postage: '',

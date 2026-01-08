@@ -192,7 +192,7 @@ page{
 .records-section {
   background-color: #fff;
   border-radius: 10rpx;
-  padding: 0 30rpx;
+  padding: 30rpx;
   box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
 }

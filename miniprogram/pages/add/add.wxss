@@ -191,6 +191,7 @@ page {
   line-height: 1.6;
   box-sizing: border-box;
   border: 2rpx solid #e0e0e0;
+  color: #333;
 }
 
 .address-textarea {
@@ -223,7 +224,7 @@ page {
   background-color: #f8f8f8;
   border-radius: 8rpx;
   font-size: 28rpx;
-  color: #000;
+  color: #333;
   box-sizing: border-box;
   border: 2rpx solid #e0e0e0;
 }
@@ -236,7 +237,7 @@ page {
   background-color: #f8f8f8;
   border-radius: 8rpx;
   font-size: 28rpx;
-  color: #000;
+  color: #333;
   box-sizing: border-box;
 }
 
@@ -247,7 +248,7 @@ page {
   background-color: #f8f8f8;
   border-radius: 8rpx;
   font-size: 28rpx;
-  color: #000;
+  color: #333;
   box-sizing: border-box;
   line-height: 1.6;
   border: 2rpx solid #e0e0e0;

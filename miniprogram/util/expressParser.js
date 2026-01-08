@@ -15,7 +15,6 @@ function parseExpressContent(content) {
   const lines = content.split('\n').map(line => line.trim()).filter(line => line)
   const records = []
   let currentRecordLines = []
-  let recordNumber = 0
 
   lines.forEach((line, index) => {
     // 跳过标题行（如 "#接龙"、"1.6"）
@@ -30,11 +29,10 @@ function parseExpressContent(content) {
       if (currentRecordLines.length > 0) {
         const record = parseMultiLineRecord(currentRecordLines.join('\n'))
         if (record) {
-          records.push(record)
+          records.push({ ...record, order: records.length })
         }
       }
       // 开始新记录
-      recordNumber = parseInt(recordStartMatch[1])
       currentRecordLines = [recordStartMatch[2]]
     } else {
       // 继续当前记录
@@ -46,7 +44,7 @@ function parseExpressContent(content) {
   if (currentRecordLines.length > 0) {
     const record = parseMultiLineRecord(currentRecordLines.join('\n'))
     if (record) {
-      records.push(record)
+      records.push({ ...record, order: records.length })
     }
   }
 
@@ -80,13 +78,9 @@ function parseMultiLineRecord(content) {
     }
   }
 
-  // 提取括号内的数量和产品信息
-  const bracketMatch = mainContent.match(/[（(]([^）)]+)[）)]/)
-  let quantityInfo = ''
-  if (bracketMatch) {
-    quantityInfo = bracketMatch[1]
-    mainContent = mainContent.replace(/[（(][^）)]+[）)]/, '').trim()
-  }
+  // 提取括号内的数量和产品信息，同时捕获括号后可能出现的登记人备注（如 "（1桔）小王"）
+  const { quantityInfo, tailRemarkName, cleanedContent: mainContentCleaned } = extractQuantityInfo(mainContent)
+  mainContent = mainContentCleaned
 
   // 解析数量和产品
   const { quantityJu, quantityGong } = parseQuantity(quantityInfo)
@@ -202,6 +196,11 @@ function parseMultiLineRecord(content) {
     }
   }
 
+  // 追加括号后捕获的人名到备注，避免重复
+  if (tailRemarkName && tailRemarkName !== recorder && (!remark || !remark.includes(tailRemarkName))) {
+    remark = remark ? `${remark}、${tailRemarkName}` : tailRemarkName
+  }
+
   // 清理地址中的多余空格和标点
   cleanAddress = cleanAddress
     .replace(/^[，,、]\s*/, '')  // 移除开头的逗号、顿号
@@ -241,13 +240,9 @@ function parseLine(line) {
     }
   }
 
-  // 提取括号内的数量和产品信息（如 "（2桔）"、"（1贡1桔）"）
-  const bracketMatch = content.match(/[（(]([^）)]+)[）)]/)
-  let quantityInfo = ''
-  if (bracketMatch) {
-    quantityInfo = bracketMatch[1]
-    content = content.replace(/[（(][^）)]+[）)]/, '').trim()
-  }
+  // 提取括号内的数量和产品信息，同时捕获括号后可能的登记人备注（如 "（1桔）小王"）
+  const { quantityInfo, tailRemarkName, cleanedContent } = extractQuantityInfo(content)
+  content = cleanedContent
 
   // 解析数量和产品
   const { quantityJu, quantityGong } = parseQuantity(quantityInfo)
@@ -397,6 +392,11 @@ function parseLine(line) {
     }
   }
 
+  // 追加括号后捕获的人名到备注，避免重复
+  if (tailRemarkName && tailRemarkName !== recorder && (!remark || !remark.includes(tailRemarkName))) {
+    remark = remark ? `${remark}、${tailRemarkName}` : tailRemarkName
+  }
+
   // 清理地址中的多余空格和标点
   cleanAddress = cleanAddress
     .replace(/^[，,、]\s*/, '')  // 移除开头的逗号、顿号
@@ -412,6 +412,60 @@ function parseLine(line) {
     quantityGong: quantityGong || 0,
     remark: remark || '',
     originalText: line
+  }
+}
+
+/**
+ * 提取数量信息与括号后人名，并返回清理后的正文
+ * 规则：
+ *  - 优先使用包含数字/桔/贡的最后一个括号
+ *  - 若没有数量括号，则退回最后一个括号
+ *  - 若该括号后仅跟 2-6 位人名（无地址关键词），视为备注并一并移除
+ * @param {string} rawContent
+ * @returns {{ quantityInfo: string, tailRemarkName: string, cleanedContent: string }}
+ */
+function extractQuantityInfo(rawContent) {
+  if (!rawContent || typeof rawContent !== 'string') {
+    return { quantityInfo: '', tailRemarkName: '', cleanedContent: rawContent }
+  }
+
+  const reg = /[（(]([^）)]+)[）)]/g
+  let match
+  let lastMatch = null
+  let lastQuantityMatch = null
+
+  while ((match = reg.exec(rawContent)) !== null) {
+    const text = match[1]
+    const start = match.index
+    const end = match.index + match[0].length
+    const data = { text, start, end }
+
+    lastMatch = data
+    if (/[桔橘贡\d]/.test(text)) {
+      lastQuantityMatch = data
+    }
+  }
+
+  const chosen = lastQuantityMatch || lastMatch
+  if (!chosen) {
+    return { quantityInfo: '', tailRemarkName: '', cleanedContent: rawContent }
+  }
+
+  let tailRemarkName = ''
+  const after = rawContent.slice(chosen.end)
+  const tailMatch = after.match(/^\s*([^\s，,：:;；\d省市区县街道路号]{2,6})\s*$/)
+  let removeEnd = chosen.end
+  if (tailMatch) {
+    tailRemarkName = tailMatch[1].trim()
+    removeEnd = chosen.end + tailMatch[0].length
+  }
+
+  const cleanedContent = (rawContent.slice(0, chosen.start) + rawContent.slice(removeEnd)).trim()
+
+  return {
+    quantityInfo: chosen.text,
+    tailRemarkName,
+    cleanedContent
   }
 }
 

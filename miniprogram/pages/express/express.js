@@ -239,6 +239,51 @@ Page({
         }
       }
     })
+  },
+
+  /**
+   * 清除当日全部记录
+   */
+  clearAll() {
+    if (!this.data.records || this.data.records.length === 0) {
+      wx.showToast({
+        title: '暂无可清除记录',
+        icon: 'none'
+      })
+      return
+    }
+
+    wx.showModal({
+      title: '确认清除',
+      content: `确定清除 ${this.data.dateDisplay} 的全部快递记录吗？`,
+      success: (res) => {
+        if (res.confirm) {
+          wx.showLoading({
+            title: '清除中...',
+            mask: true
+          })
+
+          dbUtil.deleteExpressRecordsByDate(this.data.currentDate)
+            .then(() => {
+              wx.showToast({
+                title: '已清除',
+                icon: 'success'
+              })
+              this.loadRecords()
+            })
+            .catch(err => {
+              console.error('清除失败:', err)
+              wx.showToast({
+                title: '清除失败',
+                icon: 'none'
+              })
+            })
+            .finally(() => {
+              wx.hideLoading()
+            })
+        }
+      }
+    })
   }
 })
 

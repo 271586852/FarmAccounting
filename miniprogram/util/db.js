@@ -118,10 +118,13 @@ function getExpressRecordsByDate(date) {
     })
     .get()
     .then(res => {
-      // 手动排序，按创建时间倒序排列
+      // 优先按导入顺序（order）升序，如果没有 order，再按创建时间升序
       res.data.sort((a, b) => {
+        const ao = typeof a.order === 'number' ? a.order : Infinity
+        const bo = typeof b.order === 'number' ? b.order : Infinity
+        if (ao !== bo) return ao - bo
         if (a.createTime && b.createTime) {
-          return new Date(b.createTime) - new Date(a.createTime)
+          return new Date(a.createTime) - new Date(b.createTime)
         }
         return 0
       })
@@ -136,6 +139,16 @@ function deleteExpressRecord(id) {
   return db.collection('express').doc(id).remove()
 }
 
+/**
+ * 按日期批量删除快递记录
+ */
+function deleteExpressRecordsByDate(date) {
+  if (!date) return Promise.resolve()
+  return db.collection('express')
+    .where({ date })
+    .remove()
+}
+
 module.exports = {
   addRecord,
   getRecordsByDate,
@@ -147,6 +160,7 @@ module.exports = {
   addExpressRecord,
   addExpressRecords,
   getExpressRecordsByDate,
-  deleteExpressRecord
+  deleteExpressRecord,
+  deleteExpressRecordsByDate
 }
 

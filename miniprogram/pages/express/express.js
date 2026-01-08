@@ -9,7 +9,9 @@ Page({
     records: [],
     showCalendar: false,
     showAddModal: false,
+    showEditModal: false,
     pasteContent: '',
+    editRecord: {},
     statistics: {
       totalJu: 0,
       totalGong: 0,
@@ -130,6 +132,16 @@ Page({
     this.setData({
       showAddModal: false,
       pasteContent: ''
+    })
+  },
+
+  /**
+   * 隐藏编辑弹窗
+   */
+  hideEditModal() {
+    this.setData({
+      showEditModal: false,
+      editRecord: {}
     })
   },
 
@@ -286,6 +298,81 @@ Page({
         }
       }
     })
+  },
+
+  /**
+   * 点击记录，打开编辑弹窗
+   */
+  onRecordTap(e) {
+    const id = e.currentTarget.dataset.id
+    const target = this.data.records.find(r => r._id === id)
+    if (!target) return
+    this.setData({
+      showEditModal: true,
+      editRecord: { ...target }
+    })
+  },
+
+  /**
+   * 编辑输入
+   */
+  onEditInput(e) {
+    const field = e.currentTarget.dataset.field
+    if (!field) return
+    const value = e.detail.value
+    this.setData({
+      editRecord: {
+        ...this.data.editRecord,
+        [field]: value
+      }
+    })
+  },
+
+  /**
+   * 保存编辑
+   */
+  saveEdit() {
+    const record = this.data.editRecord
+    if (!record || !record._id) {
+      this.hideEditModal()
+      return
+    }
+
+    const payload = {
+      recorder: (record.recorder || '').trim(),
+      recipient: (record.recipient || '').trim(),
+      phone: (record.phone || '').trim(),
+      address: (record.address || '').trim(),
+      remark: (record.remark || '').trim(),
+      quantityJu: parseInt(record.quantityJu || 0, 10) || 0,
+      quantityGong: parseInt(record.quantityGong || 0, 10) || 0,
+      quantityMixed: parseInt(record.quantityMixed || 0, 10) || 0
+    }
+
+    wx.showLoading({
+      title: '保存中...',
+      mask: true
+    })
+
+    dbUtil.updateExpressRecord(record._id, payload)
+      .then(() => {
+        wx.showToast({
+          title: '已更新',
+          icon: 'success'
+        })
+        this.hideEditModal()
+        this.loadRecords()
+      })
+      .catch(err => {
+        console.error('更新失败:', err)
+        wx.showToast({
+          title: '更新失败',
+          icon: 'none'
+        })
+      })
+      .finally(() => {
+        wx.hideLoading()
+      })
   }
 })
 

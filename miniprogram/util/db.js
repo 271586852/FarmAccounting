@@ -140,6 +140,18 @@ function deleteExpressRecord(id) {
 }
 
 /**
+ * 更新快递记录
+ */
+function updateExpressRecord(id, data) {
+  return db.collection('express').doc(id).update({
+    data: {
+      ...data,
+      updateTime: db.serverDate()
+    }
+  })
+}
+
+/**
  * 按日期批量删除快递记录
  */
 function deleteExpressRecordsByDate(date) {
@@ -161,6 +173,7 @@ module.exports = {
   addExpressRecords,
   getExpressRecordsByDate,
   deleteExpressRecord,
+  updateExpressRecord,
   deleteExpressRecordsByDate
 }
 

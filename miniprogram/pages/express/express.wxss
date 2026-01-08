@@ -270,7 +270,7 @@ page {
   background-color: #fff;
   border-radius: 20rpx;
   overflow: hidden;
-  max-height: 80vh;
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
 }
@@ -304,7 +304,69 @@ page {
   padding: 30rpx;
   flex: 1;
   overflow-y: auto;
+  max-height: 50vh;
 }
+
+.edit-body {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.form-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.form-row {
+  display: flex;
+  gap: 16rpx;
+}
+
+.form-item.small {
+  flex: 1;
+}
+
+.form-label {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.form-input {
+  width: 100%;
+  padding: 18rpx 20rpx; /* 垂直内边距保证输入框高度 */
+  border: 2rpx solid #e0e0e0;
+  border-radius: 10rpx;
+  font-size: 28rpx;
+  /* 关键修复：删除自定义line-height，或设为1.2-1.4（适配字体大小） */
+  line-height: 1.2; 
+  /* 新增：保证文字垂直对齐 */
+  display: flex;
+  align-items: center;
+  /* 保留原有属性 */
+  white-space: normal;
+  word-break: break-all;
+  box-sizing: border-box;
+  background-color: #fafafa;
+  /* 可选：固定最小高度，防止高度不足 */
+  min-height: 72rpx; 
+}
+
+.form-textarea {
+  width: 100%;
+  padding: 18rpx 20rpx;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 10rpx;
+  font-size: 28rpx;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-all;
+  box-sizing: border-box;
+  background-color: #fafafa;
+}
+
+
 
 .paste-textarea {
   width: 100%;

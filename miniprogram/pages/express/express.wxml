@@ -45,7 +45,7 @@
     <view wx:if="{{records.length === 0}}" class="empty-tip">
       暂无记录
     </view>
-    <view wx:for="{{records}}" wx:for-index="idx" wx:key="_id" class="record-item">
+    <view wx:for="{{records}}" wx:for-index="idx" wx:key="_id" class="record-item" data-id="{{item._id}}" bindtap="onRecordTap">
       <view class="record-content">
         <view class="record-header">
           <view class="record-left">
@@ -78,7 +78,7 @@
           </view>
         </view>
       </view>
-      <view class="delete-btn" data-id="{{item._id}}" data-index="{{index}}" bindtap="deleteRecord">
+      <view class="delete-btn" data-id="{{item._id}}" data-index="{{index}}" catchtap="deleteRecord">
         <image class="delete-icon" src="../../image/delete.png" mode="aspectFit"></image>
       </view>
     </view>
@@ -107,6 +107,56 @@
       <view class="modal-footer">
         <button class="modal-btn cancel-btn" bindtap="hideAddModal">取消</button>
         <button class="modal-btn confirm-btn" bindtap="parseAndSave">解析并保存</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 编辑弹窗 -->
+  <view wx:if="{{showEditModal}}" class="modal-mask" bindtap="hideEditModal">
+    <view class="modal-content" catchtap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">编辑快递记录</text>
+        <view class="modal-close" bindtap="hideEditModal">×</view>
+      </view>
+      <view class="modal-body edit-body">
+        <view class="form-item">
+          <text class="form-label">登记人</text>
+          <input class="form-input" value="{{editRecord.recorder}}" data-field="recorder" bindinput="onEditInput" placeholder="登记人"/>
+        </view>
+        <view class="form-item">
+          <text class="form-label">收件人</text>
+          <input class="form-input" value="{{editRecord.recipient}}" data-field="recipient" bindinput="onEditInput" placeholder="收件人"/>
+        </view>
+        <view class="form-item">
+          <text class="form-label">电话</text>
+          <input class="form-input" type="number" value="{{editRecord.phone}}" data-field="phone" bindinput="onEditInput" placeholder="手机号"/>
+        </view>
+        <view class="form-item">
+          <text class="form-label">地址</text>
+          <textarea class="form-textarea" value="{{editRecord.address}}" data-field="address" bindinput="onEditInput" placeholder="地址" auto-height></textarea>
+        </view>
+        <view class="form-row">
+          <view class="form-item small">
+            <text class="form-label">桔</text>
+            <input class="form-input" type="number" value="{{editRecord.quantityJu}}" data-field="quantityJu" bindinput="onEditInput" />
+          </view>
+          <view class="form-item small">
+            <text class="form-label">贡</text>
+            <input class="form-input" type="number" value="{{editRecord.quantityGong}}" data-field="quantityGong" bindinput="onEditInput" />
+          </view>
+          <view class="form-item small">
+            <text class="form-label">混</text>
+            <input class="form-input" type="number" value="{{editRecord.quantityMixed}}" data-field="quantityMixed" bindinput="onEditInput" />
+          </view>
+        </view>
+        <view class="form-item">
+          <text class="form-label">备注</text>
+          <input class="form-input" value="{{editRecord.remark}}" data-field="remark" bindinput="onEditInput" placeholder="备注"/>
+        </view>
+      </view>
+      <view class="modal-footer">
+        <button class="modal-btn cancel-btn" bindtap="hideEditModal">取消</button>
+        <button class="modal-btn confirm-btn" bindtap="saveEdit">保存</button>
       </view>
     </view>
   </view>

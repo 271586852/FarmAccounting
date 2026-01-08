@@ -19,15 +19,23 @@
   <!-- 统计信息 -->
   <view class="statistics-bar">
     <view class="stat-item">
-      <text class="stat-label">总桔数：</text>
+      <text class="stat-label">总桔数</text>
       <text class="stat-value">{{statistics.totalJu}}</text>
     </view>
     <view class="stat-item">
-      <text class="stat-label">总贡数：</text>
+      <text class="stat-label">总贡数</text>
       <text class="stat-value">{{statistics.totalGong}}</text>
     </view>
     <view class="stat-item">
-      <text class="stat-label">记录数：</text>
+      <text class="stat-label">总混数</text>
+      <text class="stat-value">{{statistics.totalMixed}}</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-label">总数</text>
+      <text class="stat-value">{{statistics.totalAll}}</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-label">记录数</text>
       <text class="stat-value">{{statistics.totalCount}}</text>
     </view>
   </view>
@@ -66,6 +74,7 @@
           <view class="detail-row quantity-row">
             <text class="quantity-item" wx:if="{{item.quantityJu > 0}}">{{item.quantityJu}}桔</text>
             <text class="quantity-item" wx:if="{{item.quantityGong > 0}}">{{item.quantityGong}}贡</text>
+            <text class="quantity-item" wx:if="{{item.quantityMixed > 0}}">{{item.quantityMixed}}混</text>
           </view>
         </view>
       </view>

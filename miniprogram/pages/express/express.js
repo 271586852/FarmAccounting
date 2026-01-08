@@ -13,7 +13,9 @@ Page({
     statistics: {
       totalJu: 0,
       totalGong: 0,
-      totalCount: 0
+      totalMixed: 0,
+      totalCount: 0,
+      totalAll: 0
     }
   },
 

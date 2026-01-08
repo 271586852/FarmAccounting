@@ -83,7 +83,7 @@ function parseMultiLineRecord(content) {
   mainContent = mainContentCleaned
 
   // 解析数量和产品
-  const { quantityJu, quantityGong } = parseQuantity(quantityInfo)
+  const { quantityJu, quantityGong, quantityMixed } = parseQuantity(quantityInfo)
 
   // 提取收件人、地址、手机号
   let address = ''
@@ -214,6 +214,7 @@ function parseMultiLineRecord(content) {
     phone: phone || '',
     quantityJu: quantityJu || 0,
     quantityGong: quantityGong || 0,
+    quantityMixed: quantityMixed || 0,
     remark: remark || '',
     originalText: content
   }
@@ -245,7 +246,7 @@ function parseLine(line) {
   content = cleanedContent
 
   // 解析数量和产品
-  const { quantityJu, quantityGong } = parseQuantity(quantityInfo)
+  const { quantityJu, quantityGong, quantityMixed } = parseQuantity(quantityInfo)
 
   // 提取地址、收件人、手机号
   let address = ''
@@ -410,6 +411,7 @@ function parseLine(line) {
     phone: phone || '',
     quantityJu: quantityJu || 0,
     quantityGong: quantityGong || 0,
+    quantityMixed: quantityMixed || 0,
     remark: remark || '',
     originalText: line
   }
@@ -476,15 +478,17 @@ function extractQuantityInfo(rawContent) {
  */
 function parseQuantity(quantityInfo) {
   if (!quantityInfo) {
-    return { quantityJu: 0, quantityGong: 0 }
+    return { quantityJu: 0, quantityGong: 0, quantityMixed: 0 }
   }
 
   let quantityJu = 0
   let quantityGong = 0
+  let quantityMixed = 0
 
-  // 匹配 "数字+桔" 或 "数字+贡"
+  // 匹配 "数字+桔" / "数字+贡" / "数字+混"
   const juMatch = quantityInfo.match(/(\d+)\s*[桔橘]/)
   const gongMatch = quantityInfo.match(/(\d+)\s*贡/)
+  const mixedMatch = quantityInfo.match(/(\d+)\s*混/)
 
   if (juMatch) {
     quantityJu = parseInt(juMatch[1]) || 0
@@ -494,7 +498,11 @@ function parseQuantity(quantityInfo) {
     quantityGong = parseInt(gongMatch[1]) || 0
   }
 
-  return { quantityJu, quantityGong }
+  if (mixedMatch) {
+    quantityMixed = parseInt(mixedMatch[1]) || 0
+  }
+
+  return { quantityJu, quantityGong, quantityMixed }
 }
 
 /**
@@ -504,14 +512,16 @@ function parseQuantity(quantityInfo) {
  */
 function calculateStatistics(records) {
   if (!Array.isArray(records) || records.length === 0) {
-    return { totalJu: 0, totalGong: 0, totalCount: 0 }
+    return { totalJu: 0, totalGong: 0, totalMixed: 0, totalCount: 0, totalAll: 0 }
   }
 
   const totalJu = records.reduce((sum, record) => sum + (record.quantityJu || 0), 0)
   const totalGong = records.reduce((sum, record) => sum + (record.quantityGong || 0), 0)
+  const totalMixed = records.reduce((sum, record) => sum + (record.quantityMixed || 0), 0)
   const totalCount = records.length
+  const totalAll = totalJu + totalGong + totalMixed
 
-  return { totalJu, totalGong, totalCount }
+  return { totalJu, totalGong, totalMixed, totalCount, totalAll }
 }
 
 module.exports = {

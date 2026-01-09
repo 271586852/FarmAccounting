@@ -1,11 +1,11 @@
 .container {
   background-color: #f5f5f5;
-  padding: 20rpx;
 }
 
 .container2{
   background-color: #f5f5f5;
-  padding: 0 0rpx 350rpx;
+  padding: 20rpx;
+  padding-bottom: 350rpx;
 }
 
 .form-container {

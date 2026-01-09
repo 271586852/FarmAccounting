@@ -86,6 +86,7 @@ function parseMultiLineRecord(content) {
     cleanedContent: mainContentCleaned
   } = extractQuantityInfo(mainContent)
   mainContent = mainContentCleaned
+  const tailRemark = [tailRemarkName, tailRemarkText].filter(Boolean).join(' ').trim()
 
   // 解析数量和产品
   const { quantityJu, quantityGong, quantityMixed } = parseQuantity(quantityInfo)
@@ -160,18 +161,13 @@ function parseMultiLineRecord(content) {
   recipient = recipient.replace(/^(女士|先生|小姐|老师|老板)/, '').trim()
   address = address.replace(/请选择.+快递/, '').trim()
 
-  // 从地址中移除记录人名称和其他多余的人名，放到备注中
+  // 从地址中移除记录人名称和其他多余的人名
   let remark = ''
   let cleanAddress = address
 
   // 移除记录人名称（如果出现在地址中）
   if (recorder && cleanAddress.includes(recorder)) {
     cleanAddress = cleanAddress.replace(new RegExp(recorder, 'g'), '').trim()
-    if (remark) {
-      remark += '、' + recorder
-    } else {
-      remark = recorder
-    }
   }
 
   // 移除地址开头的人名（如 "Sunny 1、"、"恒昌    "等）
@@ -189,24 +185,9 @@ function parseMultiLineRecord(content) {
       // 确保不是地址的一部分（不包含地址关键词）
       if (!/[省市区县街道路号]/g.test(name) && name.length <= 6) {
         cleanAddress = cleanAddress.replace(pattern, '').trim()
-        if (name !== recorder) {  // 避免重复添加
-          if (remark) {
-            remark += '、' + name
-          } else {
-            remark = name
-          }
-        }
         break
       }
     }
-  }
-
-  // 追加括号后捕获的人名到备注，避免重复
-  if (tailRemarkName && tailRemarkName !== recorder && (!remark || !remark.includes(tailRemarkName))) {
-    remark = remark ? `${remark}、${tailRemarkName}` : tailRemarkName
-  }
-  if (tailRemarkText && (!remark || !remark.includes(tailRemarkText))) {
-    remark = remark ? `${remark}、${tailRemarkText}` : tailRemarkText
   }
 
   // 清理地址中的多余空格和标点
@@ -214,6 +195,9 @@ function parseMultiLineRecord(content) {
     .replace(/^[，,、]\s*/, '')  // 移除开头的逗号、顿号
     .replace(/\s+/g, ' ')        // 多个空格合并为一个
     .trim()
+
+  // 仅使用括号后的内容作为备注
+  remark = tailRemark
 
   return {
     recorder: recorder || '未知',
@@ -257,6 +241,7 @@ function parseLine(line) {
     cleanedContent
   } = extractQuantityInfo(content)
   content = cleanedContent
+  const tailRemark = [tailRemarkName, tailRemarkText].filter(Boolean).join(' ').trim()
 
   // 解析数量和产品
   const { quantityJu, quantityGong, quantityMixed } = parseQuantity(quantityInfo)
@@ -366,18 +351,13 @@ function parseLine(line) {
   address = address.replace(/^(收件地址[：:]|地址[：:])/, '').trim()
   address = address.replace(/请选择.+快递/, '').trim()
 
-  // 从地址中移除记录人名称和其他多余的人名，放到备注中
+  // 从地址中移除记录人名称和其他多余的人名
   let remark = ''
   let cleanAddress = address
 
   // 移除记录人名称（如果出现在地址中）
   if (recorder && cleanAddress.includes(recorder)) {
     cleanAddress = cleanAddress.replace(new RegExp(recorder, 'g'), '').trim()
-    if (remark) {
-      remark += '、' + recorder
-    } else {
-      remark = recorder
-    }
   }
 
   // 移除地址开头的人名（如 "Sunny 1、"、"恒昌    "等）
@@ -394,24 +374,9 @@ function parseLine(line) {
       // 确保不是地址的一部分（不包含地址关键词）
       if (!/[省市区县街道路号]/g.test(name) && name.length <= 6) {
         cleanAddress = cleanAddress.replace(pattern, '').trim()
-        if (name !== recorder) {  // 避免重复添加
-          if (remark) {
-            remark += '、' + name
-          } else {
-            remark = name
-          }
-        }
         break
       }
     }
-  }
-
-  // 追加括号后捕获的人名到备注，避免重复
-  if (tailRemarkName && tailRemarkName !== recorder && (!remark || !remark.includes(tailRemarkName))) {
-    remark = remark ? `${remark}、${tailRemarkName}` : tailRemarkName
-  }
-  if (tailRemarkText && (!remark || !remark.includes(tailRemarkText))) {
-    remark = remark ? `${remark}、${tailRemarkText}` : tailRemarkText
   }
 
   // 清理地址中的多余空格和标点
@@ -419,6 +384,9 @@ function parseLine(line) {
     .replace(/^[，,、]\s*/, '')  // 移除开头的逗号、顿号
     .replace(/\s+/g, ' ')        // 多个空格合并为一个
     .trim()
+
+  // 仅使用括号后的内容作为备注
+  remark = tailRemark
 
   return {
     recorder: recorder || '未知',
@@ -476,7 +444,7 @@ function extractQuantityInfo(rawContent) {
   let removeEnd = chosen.end
   if (tailMatch) {
     tailRemarkName = tailMatch[1].trim()
-    removeEnd = chosen.end + tailMatch[0].length
+    removeEnd = rawContent.length
   } else {
     // 兜底：括号后跟随的短中文文本视为备注（避免包含电话或明显地址）
     const tailCandidate = after.trim()
@@ -485,9 +453,8 @@ function extractQuantityInfo(rawContent) {
       tailCandidate.length <= 30 &&
       !/(1[3-9]\d{9}|[省市区县街道路号])/g.test(tailCandidate)
     ) {
-      const leadingSpaces = after.length - after.trimStart().length
-      tailRemarkText = tailCandidate.replace(/^[，,、]\s*/, '').replace(/[()（）]/g, '').trim()
-      removeEnd = chosen.end + leadingSpaces + tailCandidate.length
+      tailRemarkText = tailCandidate.replace(/^[，,、]\s*/, '').trim()
+      removeEnd = rawContent.length
     }
   }
 
@@ -554,10 +521,72 @@ function calculateStatistics(records) {
   return { totalJu, totalGong, totalMixed, totalCount, totalAll }
 }
 
+/**
+ * 将记录格式化为接龙行文本（便于复制粘贴）
+ * @param {Object} record - 单条快递记录
+ * @param {number} index - 序号（从1开始）
+ * @returns {string} 接龙行文本
+ */
+function formatRecordToJielong(record, index) {
+  if (!record) return ''
+
+  const orderText = typeof index === 'number' ? `${index}. ` : ''
+  const recorder = (record.recorder || '未知').trim()
+  const address = (record.address || '').trim()
+  const recipient = (record.recipient || '').trim()
+  const phone = (record.phone || '').trim()
+  const remark = (record.remark || '').trim()
+
+  const quantityParts = []
+  if (record.quantityJu) quantityParts.push(`${record.quantityJu}桔`)
+  if (record.quantityGong) quantityParts.push(`${record.quantityGong}贡`)
+  if (record.quantityMixed) quantityParts.push(`${record.quantityMixed}混`)
+  const quantityText = quantityParts.length > 0 ? quantityParts.join('') : '0桔'
+
+  let line = `${orderText}${recorder}`
+  if (address) {
+    line += ` ${address}`
+  }
+
+  if (recipient && phone) {
+    line += `，${recipient}：${phone}`
+  } else if (recipient) {
+    line += `，收件人：${recipient}`
+  } else if (phone) {
+    line += `，电话：${phone}`
+  }
+
+  line += `。（${quantityText}）`
+
+  if (remark) {
+    line += ` 备注：${remark}`
+  }
+
+  return line.trim()
+}
+
+/**
+ * 将记录数组格式化为接龙文本（多行）
+ * @param {Array} records - 快递记录数组
+ * @returns {string} 接龙文本
+ */
+function formatRecordsToJielong(records) {
+  if (!Array.isArray(records) || records.length === 0) {
+    return ''
+  }
+
+  return records
+    .map((record, idx) => formatRecordToJielong(record, idx + 1))
+    .filter(text => !!text)
+    .join('\n')
+}
+
 module.exports = {
   parseExpressContent,
   parseLine,
   parseQuantity,
-  calculateStatistics
+  calculateStatistics,
+  formatRecordToJielong,
+  formatRecordsToJielong
 }
 

@@ -244,10 +244,16 @@ page {
   color: #fff;
 }
 
+.secondary-btn {
+  background-color: #fff;
+  color: #1aad19;
+  border: 2rpx solid #1aad19;
+}
+
 .clear-btn {
   background-color: #fff;
   color:rgb(51 , 51, 51);
-  border: 2rpx solidrgb(180, 180, 180);
+  border: 2rpx solid rgb(180, 180, 180);
 }
 
 /* 弹窗样式 */

@@ -56,7 +56,8 @@ Page({
     expressPhone: '',      // 电话
     expressAddress: '',    // 地址
     expressQuantityJu: 0, // 桔数
-    expressQuantityGong: 0 // 贡数
+    expressQuantityGong: 0, // 贡数
+    expressRemark: ''      // 备注
   },
 
   onLoad(options = {}) {
@@ -348,7 +349,8 @@ Page({
         expressPhone: parsed.phone || '',
         expressAddress: parsed.address || '',
         expressQuantityJu: parsed.quantityJu || 0,
-        expressQuantityGong: parsed.quantityGong || 0
+        expressQuantityGong: parsed.quantityGong || 0,
+        expressRemark: parsed.remark || ''
       })
       
       wx.showToast({
@@ -396,6 +398,15 @@ Page({
   onExpressAddressInput(e) {
     this.setData({
       expressAddress: e.detail.value
+    })
+  },
+
+  /**
+   * 快递备注输入
+   */
+  onExpressRemarkInput(e) {
+    this.setData({
+      expressRemark: e.detail.value
     })
   },
 
@@ -570,7 +581,8 @@ Page({
         phone: this.data.expressPhone.trim() || '',
         address: this.data.expressAddress.trim() || '',
         quantityJu: this.data.expressQuantityJu || 0,
-        quantityGong: this.data.expressQuantityGong || 0
+        quantityGong: this.data.expressQuantityGong || 0,
+        remark: this.data.expressRemark.trim() || ''
       }
 
       wx.showLoading({
@@ -647,7 +659,8 @@ Page({
         expressPhone: '',
         expressAddress: '',
         expressQuantityJu: 0,
-        expressQuantityGong: 0
+        expressQuantityGong: 0,
+        expressRemark: ''
       })
     }
   },

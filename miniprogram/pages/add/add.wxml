@@ -239,6 +239,13 @@
             bindinput="onExpressAddressInput" auto-height maxlength="200"></textarea>
         </view>
 
+        <!-- 备注 -->
+        <view class="form-item">
+          <view class="form-label">备注</view>
+          <textarea class="remark-textarea" placeholder="可填写备注或解析出的尾注" value="{{expressRemark}}"
+            bindinput="onExpressRemarkInput" auto-height maxlength="200"></textarea>
+        </view>
+
         <!-- 数量（桔） -->
         <view class="form-item">
           <view class="form-label">桔数</view>

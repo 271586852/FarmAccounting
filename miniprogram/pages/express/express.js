@@ -216,6 +216,45 @@ Page({
   },
 
   /**
+   * 导出为接龙样式并复制
+   */
+  exportJielong() {
+    const { records, dateDisplay, statistics } = this.data
+
+    if (!records || records.length === 0) {
+      wx.showToast({
+        title: '暂无记录可导出',
+        icon: 'none'
+      })
+      return
+    }
+
+    const headerLines = [
+      `# ${dateDisplay} 接龙`,
+      `汇总：${statistics.totalJu}桔 ${statistics.totalGong}贡 ${statistics.totalMixed}混 / ${statistics.totalCount}单`
+    ]
+    const listText = expressParser.formatRecordsToJielong(records)
+    const exportText = [...headerLines, listText].filter(text => !!text).join('\n')
+
+    wx.setClipboardData({
+      data: exportText,
+      success: () => {
+        wx.showToast({
+          title: '已复制到剪贴板',
+          icon: 'success'
+        })
+      },
+      fail: (err) => {
+        console.error('导出失败:', err)
+        wx.showToast({
+          title: '复制失败',
+          icon: 'none'
+        })
+      }
+    })
+  },
+
+  /**
    * 删除记录
    */
   deleteRecord(e) {

@@ -13,6 +13,7 @@
   <!-- 操作按钮 -->
   <view class="top-actions">
     <button class="action-btn primary-btn" bindtap="showAddModal">接龙解析</button>
+    <button class="action-btn secondary-btn" bindtap="exportJielong">接龙导出</button>
     <button class="action-btn clear-btn" bindtap="clearAll">清除</button>
   </view>
 

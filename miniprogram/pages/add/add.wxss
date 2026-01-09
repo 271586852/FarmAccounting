@@ -15,7 +15,7 @@
   box-sizing: border-box;
   flex: 0 0 auto;
   width: 100%;
-  padding-bottom: 60rpx;
+  padding-bottom: 1rpx;
 }
 
 .form-item {

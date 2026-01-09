@@ -79,7 +79,12 @@ function parseMultiLineRecord(content) {
   }
 
   // 提取括号内的数量和产品信息，同时捕获括号后可能出现的登记人备注（如 "（1桔）小王"）
-  const { quantityInfo, tailRemarkName, cleanedContent: mainContentCleaned } = extractQuantityInfo(mainContent)
+  const {
+    quantityInfo,
+    tailRemarkName,
+    tailRemarkText,
+    cleanedContent: mainContentCleaned
+  } = extractQuantityInfo(mainContent)
   mainContent = mainContentCleaned
 
   // 解析数量和产品
@@ -200,6 +205,9 @@ function parseMultiLineRecord(content) {
   if (tailRemarkName && tailRemarkName !== recorder && (!remark || !remark.includes(tailRemarkName))) {
     remark = remark ? `${remark}、${tailRemarkName}` : tailRemarkName
   }
+  if (tailRemarkText && (!remark || !remark.includes(tailRemarkText))) {
+    remark = remark ? `${remark}、${tailRemarkText}` : tailRemarkText
+  }
 
   // 清理地址中的多余空格和标点
   cleanAddress = cleanAddress
@@ -242,7 +250,12 @@ function parseLine(line) {
   }
 
   // 提取括号内的数量和产品信息，同时捕获括号后可能的登记人备注（如 "（1桔）小王"）
-  const { quantityInfo, tailRemarkName, cleanedContent } = extractQuantityInfo(content)
+  const {
+    quantityInfo,
+    tailRemarkName,
+    tailRemarkText,
+    cleanedContent
+  } = extractQuantityInfo(content)
   content = cleanedContent
 
   // 解析数量和产品
@@ -397,6 +410,9 @@ function parseLine(line) {
   if (tailRemarkName && tailRemarkName !== recorder && (!remark || !remark.includes(tailRemarkName))) {
     remark = remark ? `${remark}、${tailRemarkName}` : tailRemarkName
   }
+  if (tailRemarkText && (!remark || !remark.includes(tailRemarkText))) {
+    remark = remark ? `${remark}、${tailRemarkText}` : tailRemarkText
+  }
 
   // 清理地址中的多余空格和标点
   cleanAddress = cleanAddress
@@ -424,11 +440,11 @@ function parseLine(line) {
  *  - 若没有数量括号，则退回最后一个括号
  *  - 若该括号后仅跟 2-6 位人名（无地址关键词），视为备注并一并移除
  * @param {string} rawContent
- * @returns {{ quantityInfo: string, tailRemarkName: string, cleanedContent: string }}
+ * @returns {{ quantityInfo: string, tailRemarkName: string, tailRemarkText: string, cleanedContent: string }}
  */
 function extractQuantityInfo(rawContent) {
   if (!rawContent || typeof rawContent !== 'string') {
-    return { quantityInfo: '', tailRemarkName: '', cleanedContent: rawContent }
+    return { quantityInfo: '', tailRemarkName: '', tailRemarkText: '', cleanedContent: rawContent }
   }
 
   const reg = /[（(]([^）)]+)[）)]/g
@@ -450,16 +466,29 @@ function extractQuantityInfo(rawContent) {
 
   const chosen = lastQuantityMatch || lastMatch
   if (!chosen) {
-    return { quantityInfo: '', tailRemarkName: '', cleanedContent: rawContent }
+    return { quantityInfo: '', tailRemarkName: '', tailRemarkText: '', cleanedContent: rawContent }
   }
 
   let tailRemarkName = ''
+  let tailRemarkText = ''
   const after = rawContent.slice(chosen.end)
   const tailMatch = after.match(/^\s*([^\s，,：:;；\d省市区县街道路号]{2,6})\s*$/)
   let removeEnd = chosen.end
   if (tailMatch) {
     tailRemarkName = tailMatch[1].trim()
     removeEnd = chosen.end + tailMatch[0].length
+  } else {
+    // 兜底：括号后跟随的短中文文本视为备注（避免包含电话或明显地址）
+    const tailCandidate = after.trim()
+    if (
+      tailCandidate &&
+      tailCandidate.length <= 30 &&
+      !/(1[3-9]\d{9}|[省市区县街道路号])/g.test(tailCandidate)
+    ) {
+      const leadingSpaces = after.length - after.trimStart().length
+      tailRemarkText = tailCandidate.replace(/^[，,、]\s*/, '').replace(/[()（）]/g, '').trim()
+      removeEnd = chosen.end + leadingSpaces + tailCandidate.length
+    }
   }
 
   const cleanedContent = (rawContent.slice(0, chosen.start) + rawContent.slice(removeEnd)).trim()
@@ -467,6 +496,7 @@ function extractQuantityInfo(rawContent) {
   return {
     quantityInfo: chosen.text,
     tailRemarkName,
+    tailRemarkText,
     cleanedContent
   }
 }

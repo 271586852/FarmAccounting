@@ -1,355 +1,271 @@
 <view class="container">
-  <view class="form-container">
-    <!-- 第一行：记账类型选择 -->
-    <view class="form-item">
-      <view class="form-label">记账类型 <text class="required">*</text></view>
-      <view class="options-container">
-        <view class="option-item {{billType === 'normal' ? 'selected' : ''}}"
-              data-type="normal"
-              bindtap="onBillTypeSelect">
-          普通
-        </view>
-        <view class="option-item {{billType === 'express' ? 'selected' : ''}}"
-              data-type="express"
-              bindtap="onBillTypeSelect">
-          快递
-        </view>
-      </view>
-    </view>
-
-    <!-- 普通类记账 -->
-    <block wx:if="{{billType === 'normal'}}">
-      <!-- 种类选择 -->
+  <view class="container2">
+    <view class="form-container">
+      <!-- 第一行：记账类型选择 -->
       <view class="form-item">
-        <view class="form-label">种类 <text class="required">*</text></view>
+        <view class="form-label">记账类型 <text class="required">*</text></view>
         <view class="options-container">
-          <view wx:for="{{typeOptions}}" wx:key="index" 
-                class="option-item {{selectedType === item ? 'selected' : ''}}"
-                data-index="{{index}}"
-                data-type="{{item}}"
-                bindtap="onTypeSelect">
-            {{item}}
+          <view class="option-item {{billType === 'normal' ? 'selected' : ''}}" data-type="normal"
+            bindtap="onBillTypeSelect">
+            普通
           </view>
-        </view>
-        <input wx:if="{{showCustomInput}}" 
-               class="custom-input" 
-               placeholder="请输入其他种类" 
-               value="{{customType}}"
-               bindinput="onCustomTypeInput" />
-      </view>
-
-    <!-- 第二行：数量 -->
-    <view class="form-item">
-      <view class="form-label">数量</view>
-      <view class="number-input-group">
-        <view class="number-btn" bindtap="decreaseQuantity">-</view>
-        <input class="number-input" 
-               type="number" 
-               value="{{quantity}}" 
-               bindinput="onQuantityInput" />
-        <view class="number-btn" bindtap="increaseQuantity">+</view>
-        <view class="unit-options">
-          <view wx:for="{{unitOptions}}" wx:key="index"
-                class="unit-option {{unit === item ? 'selected' : ''}}"
-                data-unit="{{item}}"
-                bindtap="onUnitSelect">
-            {{item}}
-          </view>
-        </view>
-      </view>
-    </view>
-
-      <!-- 第三行：重量 -->
-      <view class="form-item">
-      <view class="form-label">重量</view>
-      <view class="number-input-group">
-        <view class="number-btn" bindtap="decreaseWeight">-</view>
-        <input class="number-input" 
-               type="digit" 
-               value="{{weight}}" 
-               placeholder="0"
-               bindinput="onWeightInput" />
-        <view class="number-btn" bindtap="increaseWeight">+</view>
-        <text class="unit-text">市斤</text>
-      </view>
-    </view>
-
-      <!-- 客户 -->
-      <view class="form-item">
-        <view class="form-label">客户</view>
-        <input class="text-input"
-               placeholder="请输入客户名称"
-               value="{{customer}}"
-               data-field="customer"
-               bindinput="onFieldInput" />
-      </view>
-
-      <!-- 销售类型 -->
-      <view class="form-item">
-        <view class="form-label">销售</view>
-        <view class="options-container">
-          <view wx:for="{{saleTypeOptions}}" wx:key="index"
-                class="option-item {{saleType === item ? 'selected' : ''}}"
-                data-type="{{item}}"
-                bindtap="onSaleTypeSelect">
-            {{item}}
+          <view class="option-item {{billType === 'express' ? 'selected' : ''}}" data-type="express"
+            bindtap="onBillTypeSelect">
+            快递
           </view>
         </view>
       </view>
 
-      <!-- 果级 -->
-      <view class="form-item">
-        <view class="form-label">果级</view>
-        <view class="options-container">
-          <view wx:for="{{gradeOptions}}" wx:key="index"
-                class="option-item {{grade === item ? 'selected' : ''}}"
-                data-type="{{item}}"
-                bindtap="onGradeSelect">
-            {{item}}
+      <!-- 普通类记账 -->
+      <block wx:if="{{billType === 'normal'}}">
+        <!-- 种类选择 -->
+        <view class="form-item">
+          <view class="form-label">种类 <text class="required">*</text></view>
+          <view class="options-container">
+            <view wx:for="{{typeOptions}}" wx:key="index"
+              class="option-item {{selectedType === item ? 'selected' : ''}}" data-index="{{index}}"
+              data-type="{{item}}" bindtap="onTypeSelect">
+              {{item}}
+            </view>
+          </view>
+          <input wx:if="{{showCustomInput}}" class="custom-input" placeholder="请输入其他种类" value="{{customType}}"
+            bindinput="onCustomTypeInput" />
+        </view>
+
+        <!-- 第二行：数量 -->
+        <view class="form-item">
+          <view class="form-label">数量</view>
+          <view class="number-input-group">
+            <view class="number-btn" bindtap="decreaseQuantity">-</view>
+            <input class="number-input" type="number" value="{{quantity}}" bindinput="onQuantityInput" />
+            <view class="number-btn" bindtap="increaseQuantity">+</view>
+            <view class="unit-options">
+              <view wx:for="{{unitOptions}}" wx:key="index" class="unit-option {{unit === item ? 'selected' : ''}}"
+                data-unit="{{item}}" bindtap="onUnitSelect">
+                {{item}}
+              </view>
+            </view>
           </view>
         </view>
-      </view>
 
-
-      <!-- 第四行：邮费 -->
-      <view class="form-item">
-        <view class="form-label">邮费</view>
-        <view class="postage-input-group">
-          <input class="postage-input" 
-                 type="digit" 
-                 value="{{postage}}" 
-                 placeholder="请输入"
-                 bindinput="onPostageInput" />
-          <text class="unit-text">元</text>
+        <!-- 第三行：重量 -->
+        <view class="form-item">
+          <view class="form-label">重量</view>
+          <view class="number-input-group">
+            <view class="number-btn" bindtap="decreaseWeight">-</view>
+            <input class="number-input" type="digit" value="{{weight}}" placeholder="0" bindinput="onWeightInput" />
+            <view class="number-btn" bindtap="increaseWeight">+</view>
+            <text class="unit-text">市斤</text>
+          </view>
         </view>
-      </view>
 
-      <!-- 单价 -->
-      <view class="form-item">
-        <view class="form-label">单价</view>
-        <view class="postage-input-group">
-          <input class="postage-input"
-                 type="digit"
-                 placeholder="请输入"
-                 value="{{unitPrice}}"
-                 data-field="unitPrice"
-                 bindinput="onFieldInput" />
-          <text class="unit-text">元</text>
+        <!-- 客户 -->
+        <view class="form-item">
+          <view class="form-label">客户</view>
+          <input class="text-input" placeholder="请输入客户名称" value="{{customer}}" data-field="customer"
+            bindinput="onFieldInput" />
         </view>
-      </view>
 
-      <!-- 运费 -->
-      <view class="form-item">
-        <view class="form-label">运费</view>
-        <view class="postage-input-group">
-          <input class="postage-input"
-                 type="digit"
-                 placeholder="请输入"
-                 value="{{freight}}"
-                 data-field="freight"
-                 bindinput="onFieldInput" />
-          <text class="unit-text">元</text>
+        <!-- 销售类型 -->
+        <view class="form-item">
+          <view class="form-label">销售</view>
+          <view class="options-container">
+            <view wx:for="{{saleTypeOptions}}" wx:key="index"
+              class="option-item {{saleType === item ? 'selected' : ''}}" data-type="{{item}}"
+              bindtap="onSaleTypeSelect">
+              {{item}}
+            </view>
+          </view>
         </view>
-      </view>
 
-      <!-- 搬运 -->
-      <view class="form-item">
-        <view class="form-label">搬运</view>
-        <view class="postage-input-group">
-          <input class="postage-input"
-                 type="digit"
-                 placeholder="请输入"
-                 value="{{handlingFee}}"
-                 data-field="handlingFee"
-                 bindinput="onFieldInput" />
-          <text class="unit-text">元</text>
+        <!-- 果级 -->
+        <view class="form-item">
+          <view class="form-label">果级</view>
+          <view class="options-container">
+            <view wx:for="{{gradeOptions}}" wx:key="index" class="option-item {{grade === item ? 'selected' : ''}}"
+              data-type="{{item}}" bindtap="onGradeSelect">
+              {{item}}
+            </view>
+          </view>
         </view>
-      </view>
 
-      <!-- 代办 -->
-      <view class="form-item">
-        <view class="form-label">代办</view>
-        <view class="postage-input-group">
-          <input class="postage-input"
-                 type="digit"
-                 placeholder="请输入"
-                 value="{{agencyFee}}"
-                 data-field="agencyFee"
-                 bindinput="onFieldInput" />
-          <text class="unit-text">元</text>
+
+        <!-- 第四行：邮费 -->
+        <view class="form-item">
+          <view class="form-label">邮费</view>
+          <view class="postage-input-group">
+            <input class="postage-input" type="digit" value="{{postage}}" placeholder="请输入"
+              bindinput="onPostageInput" />
+            <text class="unit-text">元</text>
+          </view>
         </view>
-      </view>
 
-      <!-- 出筐 -->
-      <view class="form-item">
-        <view class="form-label">出筐</view>
-        <view class="postage-input-group">
-          <input class="postage-input"
-                 type="digit"
-                 placeholder="请输入"
-                 value="{{outBasket}}"
-                 data-field="outBasket"
-                 bindinput="onFieldInput" />
-          <text class="unit-text">筐</text>
+        <!-- 单价 -->
+        <view class="form-item">
+          <view class="form-label">单价</view>
+          <view class="postage-input-group">
+            <input class="postage-input" type="digit" placeholder="请输入" value="{{unitPrice}}" data-field="unitPrice"
+              bindinput="onFieldInput" />
+            <text class="unit-text">元</text>
+          </view>
         </view>
-      </view>
 
-      <!-- 回筐 -->
-      <view class="form-item">
-        <view class="form-label">回筐</view>
-        <view class="postage-input-group">
-          <input class="postage-input"
-                 type="digit"
-                 placeholder="请输入"
-                 value="{{returnBasket}}"
-                 data-field="returnBasket"
-                 bindinput="onFieldInput" />
-          <text class="unit-text">筐</text>
+        <!-- 运费 -->
+        <view class="form-item">
+          <view class="form-label">运费</view>
+          <view class="postage-input-group">
+            <input class="postage-input" type="digit" placeholder="请输入" value="{{freight}}" data-field="freight"
+              bindinput="onFieldInput" />
+            <text class="unit-text">元</text>
+          </view>
         </view>
-      </view>
 
-      <!-- 送货人 -->
-      <view class="form-item">
-        <view class="form-label">送货人</view>
-        <input class="text-input"
-               placeholder="请输入送货人"
-               value="{{deliverer}}"
-               data-field="deliverer"
-               bindinput="onFieldInput" />
-      </view>
-
-      <!-- 实收 -->
-      <view class="form-item">
-        <view class="form-label">实收</view>
-        <view class="postage-input-group">
-          <input class="postage-input"
-                 type="digit"
-                 placeholder="请输入"
-                 value="{{receivedAmount}}"
-                 data-field="receivedAmount"
-                 bindinput="onFieldInput" />
-          <text class="unit-text">元</text>
+        <!-- 搬运 -->
+        <view class="form-item">
+          <view class="form-label">搬运</view>
+          <view class="postage-input-group">
+            <input class="postage-input" type="digit" placeholder="请输入" value="{{handlingFee}}" data-field="handlingFee"
+              bindinput="onFieldInput" />
+            <text class="unit-text">元</text>
+          </view>
         </view>
-      </view>
 
-      <!-- 收款人 -->
-      <view class="form-item">
-        <view class="form-label">收款人</view>
-        <input class="text-input"
-               placeholder="请输入收款人"
-               value="{{payee}}"
-               data-field="payee"
-               bindinput="onFieldInput" />
-      </view>
-
-      <!-- 收款方式 -->
-      <view class="form-item">
-        <view class="form-label">收款方式</view>
-        <input class="text-input"
-               placeholder="请输入收款方式"
-               value="{{paymentMethod}}"
-               data-field="paymentMethod"
-               bindinput="onFieldInput" />
-      </view>
-
-      <!-- 备注 -->
-      <view class="form-item">
-        <view class="form-label">备注</view>
-        <textarea class="remark-textarea"
-                  placeholder="请输入备注"
-                  value="{{remark}}"
-                  data-field="remark"
-                  bindinput="onFieldInput" />
-      </view>
-    </block>
-
-    <!-- 快递类记账 -->
-    <block wx:if="{{billType === 'express'}}">
-      <!-- 快速输入（支持自动解析） -->
-      <view class="form-item">
-        <view class="form-label">快速输入 <text class="tip-text">（支持自动解析）</text></view>
-        <textarea class="express-textarea" 
-                  placeholder="请输入或粘贴快递信息，例如：张三 广东省肇庆市四会市江谷镇清平村704  陈四  1594xxxx（5桔1贡）王五"
-                  value="{{expressInputText}}"
-                  bindinput="onExpressInput"
-                  auto-height
-                  maxlength="500"></textarea>
-        <view class="parse-btn-wrapper">
-          <button class="parse-btn" bindtap="parseExpressText">解析</button>
+        <!-- 代办 -->
+        <view class="form-item">
+          <view class="form-label">代办</view>
+          <view class="postage-input-group">
+            <input class="postage-input" type="digit" placeholder="请输入" value="{{agencyFee}}" data-field="agencyFee"
+              bindinput="onFieldInput" />
+            <text class="unit-text">元</text>
+          </view>
         </view>
-      </view>
 
-      <!-- 登记人 -->
-      <view class="form-item">
-        <view class="form-label">登记人</view>
-        <input class="express-input" 
-               placeholder="请输入登记人姓名" 
-               value="{{expressRecorder}}"
-               bindinput="onExpressRecorderInput" />
-      </view>
-
-      <!-- 收件人 -->
-      <view class="form-item">
-        <view class="form-label">收件人</view>
-        <input class="express-input" 
-               placeholder="请输入收件人姓名" 
-               value="{{expressRecipient}}"
-               bindinput="onExpressRecipientInput" />
-      </view>
-
-      <!-- 电话 -->
-      <view class="form-item">
-        <view class="form-label">电话</view>
-        <input class="express-input" 
-               type="number"
-               placeholder="请输入联系电话" 
-               value="{{expressPhone}}"
-               bindinput="onExpressPhoneInput" />
-      </view>
-
-      <!-- 地址 -->
-      <view class="form-item">
-        <view class="form-label">地址</view>
-        <textarea class="express-textarea address-textarea" 
-                  placeholder="请输入收件地址" 
-                  value="{{expressAddress}}"
-                  bindinput="onExpressAddressInput"
-                  auto-height
-                  maxlength="200"></textarea>
-      </view>
-
-      <!-- 数量（桔） -->
-      <view class="form-item">
-        <view class="form-label">桔数</view>
-        <view class="number-input-group">
-          <view class="number-btn" bindtap="decreaseExpressJu">-</view>
-          <input class="number-input" 
-                 type="number" 
-                 value="{{expressQuantityJu}}" 
-                 bindinput="onExpressJuInput" />
-          <view class="number-btn" bindtap="increaseExpressJu">+</view>
-          <text class="unit-text">桔</text>
+        <!-- 出筐 -->
+        <view class="form-item">
+          <view class="form-label">出筐</view>
+          <view class="postage-input-group">
+            <input class="postage-input" type="digit" placeholder="请输入" value="{{outBasket}}" data-field="outBasket"
+              bindinput="onFieldInput" />
+            <text class="unit-text">筐</text>
+          </view>
         </view>
-      </view>
 
-      <!-- 数量（贡） -->
-      <view class="form-item">
-        <view class="form-label">贡数</view>
-        <view class="number-input-group">
-          <view class="number-btn" bindtap="decreaseExpressGong">-</view>
-          <input class="number-input" 
-                 type="number" 
-                 value="{{expressQuantityGong}}" 
-                 bindinput="onExpressGongInput" />
-          <view class="number-btn" bindtap="increaseExpressGong">+</view>
-          <text class="unit-text">贡</text>
+        <!-- 回筐 -->
+        <view class="form-item">
+          <view class="form-label">回筐</view>
+          <view class="postage-input-group">
+            <input class="postage-input" type="digit" placeholder="请输入" value="{{returnBasket}}"
+              data-field="returnBasket" bindinput="onFieldInput" />
+            <text class="unit-text">筐</text>
+          </view>
         </view>
-      </view>
-    </block>
 
-    <!-- 提交按钮（固定底部） -->
-    <view class="submit-wrapper">
-      <button class="submit-btn" bindtap="submitForm">保存</button>
+        <!-- 送货人 -->
+        <view class="form-item">
+          <view class="form-label">送货人</view>
+          <input class="text-input" placeholder="请输入送货人" value="{{deliverer}}" data-field="deliverer"
+            bindinput="onFieldInput" />
+        </view>
+
+        <!-- 实收 -->
+        <view class="form-item">
+          <view class="form-label">实收</view>
+          <view class="postage-input-group">
+            <input class="postage-input" type="digit" placeholder="请输入" value="{{receivedAmount}}"
+              data-field="receivedAmount" bindinput="onFieldInput" />
+            <text class="unit-text">元</text>
+          </view>
+        </view>
+
+        <!-- 收款人 -->
+        <view class="form-item">
+          <view class="form-label">收款人</view>
+          <input class="text-input" placeholder="请输入收款人" value="{{payee}}" data-field="payee"
+            bindinput="onFieldInput" />
+        </view>
+
+        <!-- 收款方式 -->
+        <view class="form-item">
+          <view class="form-label">收款方式</view>
+          <input class="text-input" placeholder="请输入收款方式" value="{{paymentMethod}}" data-field="paymentMethod"
+            bindinput="onFieldInput" />
+        </view>
+
+        <!-- 备注 -->
+        <view class="form-item">
+          <view class="form-label">备注</view>
+          <textarea class="remark-textarea" placeholder="请输入备注" value="{{remark}}" data-field="remark"
+            bindinput="onFieldInput" />
+        </view>
+      </block>
+
+      <!-- 快递类记账 -->
+      <block wx:if="{{billType === 'express'}}">
+        <!-- 快速输入（支持自动解析） -->
+        <view class="form-item">
+          <view class="form-label">快速输入 <text class="tip-text">（支持自动解析）</text></view>
+          <textarea class="express-textarea" placeholder="请输入或粘贴快递信息，例如：张三 广东省肇庆市四会市江谷镇清平村704  陈四  1594xxxx（5桔1贡）王五"
+            value="{{expressInputText}}" bindinput="onExpressInput" auto-height maxlength="500"></textarea>
+          <view class="parse-btn-wrapper">
+            <button class="parse-btn" bindtap="parseExpressText">解析</button>
+          </view>
+        </view>
+
+        <!-- 登记人 -->
+        <view class="form-item">
+          <view class="form-label">登记人</view>
+          <input class="express-input" placeholder="请输入登记人姓名" value="{{expressRecorder}}"
+            bindinput="onExpressRecorderInput" />
+        </view>
+
+        <!-- 收件人 -->
+        <view class="form-item">
+          <view class="form-label">收件人</view>
+          <input class="express-input" placeholder="请输入收件人姓名" value="{{expressRecipient}}"
+            bindinput="onExpressRecipientInput" />
+        </view>
+
+        <!-- 电话 -->
+        <view class="form-item">
+          <view class="form-label">电话</view>
+          <input class="express-input" type="number" placeholder="请输入联系电话" value="{{expressPhone}}"
+            bindinput="onExpressPhoneInput" />
+        </view>
+
+        <!-- 地址 -->
+        <view class="form-item">
+          <view class="form-label">地址</view>
+          <textarea class="express-textarea address-textarea" placeholder="请输入收件地址" value="{{expressAddress}}"
+            bindinput="onExpressAddressInput" auto-height maxlength="200"></textarea>
+        </view>
+
+        <!-- 数量（桔） -->
+        <view class="form-item">
+          <view class="form-label">桔数</view>
+          <view class="number-input-group">
+            <view class="number-btn" bindtap="decreaseExpressJu">-</view>
+            <input class="number-input" type="number" value="{{expressQuantityJu}}" bindinput="onExpressJuInput" />
+            <view class="number-btn" bindtap="increaseExpressJu">+</view>
+            <text class="unit-text">桔</text>
+          </view>
+        </view>
+
+        <!-- 数量（贡） -->
+        <view class="form-item">
+          <view class="form-label">贡数</view>
+          <view class="number-input-group">
+            <view class="number-btn" bindtap="decreaseExpressGong">-</view>
+            <input class="number-input" type="number" value="{{expressQuantityGong}}" bindinput="onExpressGongInput" />
+            <view class="number-btn" bindtap="increaseExpressGong">+</view>
+            <text class="unit-text">贡</text>
+          </view>
+        </view>
+      </block>
+
+      <!-- 提交按钮（固定底部） -->
+      <view class="submit-wrapper">
+        <button class="submit-btn" bindtap="submitForm">保存</button>
+      </view>
     </view>
   </view>
 </view>

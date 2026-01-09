@@ -1,26 +1,21 @@
-page {
-  background-color: #f5f5f5;
-  min-height: 100vh;
-}
-
 .container {
-  min-height: 100vh;
   background-color: #f5f5f5;
   padding: 20rpx;
-  padding-bottom: 3000rpx; /* 预留底部悬浮按钮与凸起+号空间 */
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
+}
+
+.container2{
+  background-color: #f5f5f5;
+  padding: 0 0rpx 350rpx;
 }
 
 .form-container {
+  padding: 20rpx;
   background-color: #fff;
   border-radius: 10rpx;
-  padding: 20rpx 20rpx 300rpx;
   box-sizing: border-box;
-  flex: 0 0 auto; /* 按内容自适应高度 */
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  flex: 0 0 auto;
+  width: 100%;
+  padding-bottom: 60rpx;
 }
 
 .form-item {

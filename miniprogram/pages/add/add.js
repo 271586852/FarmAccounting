@@ -57,6 +57,7 @@ Page({
     expressAddress: '',    // 地址
     expressQuantityJu: 0, // 桔数
     expressQuantityGong: 0, // 贡数
+    expressQuantityHun: 0, // 混数
     expressRemark: ''      // 备注
   },
 
@@ -350,6 +351,7 @@ Page({
         expressAddress: parsed.address || '',
         expressQuantityJu: parsed.quantityJu || 0,
         expressQuantityGong: parsed.quantityGong || 0,
+        expressQuantityHun: parsed.quantityMixed || 0,
         expressRemark: parsed.remark || ''
       })
       
@@ -433,6 +435,17 @@ Page({
   },
 
   /**
+   * 混数输入
+   */
+  onExpressHunInput(e) {
+    let value = parseInt(e.detail.value) || 0
+    if (value < 0) value = 0
+    this.setData({
+      expressQuantityHun: value
+    })
+  },
+
+  /**
    * 桔数减
    */
   decreaseExpressJu() {
@@ -469,6 +482,26 @@ Page({
   increaseExpressGong() {
     this.setData({
       expressQuantityGong: this.data.expressQuantityGong + 1
+    })
+  },
+
+  /**
+   * 混数减
+   */
+  decreaseExpressHun() {
+    if (this.data.expressQuantityHun > 0) {
+      this.setData({
+        expressQuantityHun: this.data.expressQuantityHun - 1
+      })
+    }
+  },
+
+  /**
+   * 混数加
+   */
+  increaseExpressHun() {
+    this.setData({
+      expressQuantityHun: this.data.expressQuantityHun + 1
     })
   },
 
@@ -565,9 +598,9 @@ Page({
         return
       }
 
-      if (this.data.expressQuantityJu <= 0 && this.data.expressQuantityGong <= 0) {
+      if (this.data.expressQuantityJu <= 0 && this.data.expressQuantityGong <= 0 && this.data.expressQuantityHun <= 0) {
         wx.showToast({
-          title: '请输入数量（桔或贡）',
+          title: '请输入数量（桔/贡/混）',
           icon: 'none'
         })
         return
@@ -582,6 +615,7 @@ Page({
         address: this.data.expressAddress.trim() || '',
         quantityJu: this.data.expressQuantityJu || 0,
         quantityGong: this.data.expressQuantityGong || 0,
+        quantityMixed: this.data.expressQuantityHun || 0,
         remark: this.data.expressRemark.trim() || ''
       }
 
@@ -660,6 +694,7 @@ Page({
         expressAddress: '',
         expressQuantityJu: 0,
         expressQuantityGong: 0,
+        expressQuantityHun: 0,
         expressRemark: ''
       })
     }

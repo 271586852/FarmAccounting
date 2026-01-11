@@ -267,6 +267,18 @@
             <text class="unit-text">贡</text>
           </view>
         </view>
+
+          <!-- 数量（混） -->
+          <view class="form-item">
+          <view class="form-label">混数</view>
+          <view class="number-input-group">
+            <view class="number-btn" bindtap="decreaseExpressHun">-</view>
+            <input class="number-input" type="number" value="{{expressQuantityHun}}" bindinput="onExpressHunInput" />
+            <view class="number-btn" bindtap="increaseExpressHun">+</view>
+            <text class="unit-text">混</text>
+          </view>
+        </view>
+
       </block>
 
       <!-- 提交按钮（固定底部） -->

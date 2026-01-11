@@ -112,6 +112,31 @@
     </view>
   </view>
 
+  <!-- 导出预览弹窗 -->
+  <view wx:if="{{showExportModal}}" class="modal-mask" bindtap="hideExportModal">
+    <view class="modal-content" catchtap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">接龙导出预览</text>
+        <view class="modal-close" bindtap="hideExportModal">×</view>
+      </view>
+      <view class="modal-body">
+        <view class="modal-tip">
+          <text>长按下方文本框手动复制</text>
+        </view>
+        <textarea 
+          class="export-textarea"
+          value="{{exportText}}"
+          auto-height
+          maxlength="-1"
+          show-confirm-bar="{{false}}"
+        ></textarea>
+      </view>
+      <view class="modal-footer">
+        <button class="modal-btn cancel-btn" bindtap="hideExportModal">关闭</button>
+      </view>
+    </view>
+  </view>
+
   <!-- 编辑弹窗 -->
   <view wx:if="{{showEditModal}}" class="modal-mask" bindtap="hideEditModal">
     <view class="modal-content" catchtap="stopPropagation">

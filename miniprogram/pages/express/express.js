@@ -10,8 +10,10 @@ Page({
     showCalendar: false,
     showAddModal: false,
     showEditModal: false,
+    showExportModal: false,
     pasteContent: '',
     editRecord: {},
+    exportText: '',
     statistics: {
       totalJu: 0,
       totalGong: 0,
@@ -146,6 +148,16 @@ Page({
   },
 
   /**
+   * 关闭导出弹窗
+   */
+  hideExportModal() {
+    this.setData({
+      showExportModal: false,
+      exportText: ''
+    })
+  },
+
+  /**
    * 粘贴内容输入
    */
   onPasteInput(e) {
@@ -216,7 +228,7 @@ Page({
   },
 
   /**
-   * 导出为接龙样式并复制
+   * 导出为接龙样式并展示
    */
   exportJielong() {
     const { records, dateDisplay, statistics } = this.data
@@ -236,21 +248,9 @@ Page({
     const listText = expressParser.formatRecordsToJielong(records)
     const exportText = [...headerLines, listText].filter(text => !!text).join('\n')
 
-    wx.setClipboardData({
-      data: exportText,
-      success: () => {
-        wx.showToast({
-          title: '已复制到剪贴板',
-          icon: 'success'
-        })
-      },
-      fail: (err) => {
-        console.error('导出失败:', err)
-        wx.showToast({
-          title: '复制失败',
-          icon: 'none'
-        })
-      }
+    this.setData({
+      exportText,
+      showExportModal: true
     })
   },
 
@@ -412,6 +412,11 @@ Page({
       .finally(() => {
         wx.hideLoading()
       })
-  }
+  },
+
+  /**
+   * 阻止事件冒泡（用于弹窗内容区域）
+   */
+  stopPropagation() {}
 })
 

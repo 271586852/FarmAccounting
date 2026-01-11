@@ -112,17 +112,36 @@ function addExpressRecords(records) {
  * 根据日期查询快递记录
  */
 function getExpressRecordsByDate(date) {
+  // 小程序端单次 get 最大 20 条，需分页拉全量
+  const PAGE_SIZE = 20
+
   return db.collection('express')
-    .where({
-      date: date
+    .where({ date })
+    .count()
+    .then(({ total }) => {
+      const batchTimes = Math.ceil(total / PAGE_SIZE) || 1
+      const tasks = []
+
+      for (let i = 0; i < batchTimes; i++) {
+        tasks.push(
+          db.collection('express')
+            .where({ date })
+            .skip(i * PAGE_SIZE)
+            .limit(PAGE_SIZE)
+            .get()
+        )
+      }
+
+      return Promise.all(tasks)
     })
-    .get()
-    .then(res => {
+    .then(results => {
+      const merged = results.reduce((acc, cur) => acc.concat(cur.data || []), [])
+
       // 规范化排序键：
       // 1) 优先使用数字 order（新增解析时写入，为递增时间戳）
       // 2) 其次使用 createTime 时间戳
       // 3) 最后使用原始索引，避免排序失败
-      const normalized = res.data.map((item, idx) => {
+      const normalized = merged.map((item, idx) => {
         const hasOrder = typeof item.order === 'number' && !Number.isNaN(item.order)
         const order = hasOrder
           ? item.order
@@ -131,8 +150,7 @@ function getExpressRecordsByDate(date) {
       })
 
       normalized.sort((a, b) => a.order - b.order)
-      res.data = normalized
-      return res
+      return { data: normalized }
     })
 }
 

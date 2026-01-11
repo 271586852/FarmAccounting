@@ -195,10 +195,14 @@ Page({
       mask: true
     })
 
+    // 基于时间戳生成追加顺序，保证新解析的记录排在旧记录之后
+    const baseOrder = Date.now()
+
     // 为每条记录添加日期
     const recordsToSave = parsedRecords.map(record => ({
       ...record,
-      date: this.data.currentDate
+      date: this.data.currentDate,
+      order: baseOrder + record.order
     }))
 
     // 批量保存

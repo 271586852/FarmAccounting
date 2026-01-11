@@ -118,16 +118,20 @@ function getExpressRecordsByDate(date) {
     })
     .get()
     .then(res => {
-      // 优先按导入顺序（order）升序，如果没有 order，再按创建时间升序
-      res.data.sort((a, b) => {
-        const ao = typeof a.order === 'number' ? a.order : Infinity
-        const bo = typeof b.order === 'number' ? b.order : Infinity
-        if (ao !== bo) return ao - bo
-        if (a.createTime && b.createTime) {
-          return new Date(a.createTime) - new Date(b.createTime)
-        }
-        return 0
+      // 规范化排序键：
+      // 1) 优先使用数字 order（新增解析时写入，为递增时间戳）
+      // 2) 其次使用 createTime 时间戳
+      // 3) 最后使用原始索引，避免排序失败
+      const normalized = res.data.map((item, idx) => {
+        const hasOrder = typeof item.order === 'number' && !Number.isNaN(item.order)
+        const order = hasOrder
+          ? item.order
+          : (item.createTime ? new Date(item.createTime).getTime() : idx)
+        return { ...item, order }
       })
+
+      normalized.sort((a, b) => a.order - b.order)
+      res.data = normalized
       return res
     })
 }

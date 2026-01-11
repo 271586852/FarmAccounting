@@ -616,6 +616,7 @@ Page({
         quantityJu: this.data.expressQuantityJu || 0,
         quantityGong: this.data.expressQuantityGong || 0,
         quantityMixed: this.data.expressQuantityHun || 0,
+        order: Date.now(),
         remark: this.data.expressRemark.trim() || ''
       }
 

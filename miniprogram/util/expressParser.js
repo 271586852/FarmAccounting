@@ -12,13 +12,22 @@ function parseExpressContent(content) {
     return []
   }
 
+  // 判定日期型标题行（如 "1月11日"、"2025年1月11日"）
+  const isDateLine = (text) => {
+    const t = (text || '').replace(/\s/g, '')
+    return (
+      /^#?\d{1,2}月\d{1,2}日$/.test(t) ||                      // 1月11日
+      /^#?\d{4}[年/.-]\d{1,2}[月/.-]?\d{1,2}日?$/.test(t)      // 2025-01-11、2025年1月11日
+    )
+  }
+
   const lines = content.split('\n').map(line => line.trim()).filter(line => line)
   const records = []
   let currentRecordLines = []
 
   lines.forEach((line, index) => {
-    // 跳过标题行（如 "#接龙"、"1.6"）
-    if (line.startsWith('#') || /^\d+\.?\d*$/.test(line)) {
+    // 跳过标题行（如 "#接龙"、"1.6"、"1月11日"）
+    if (line.startsWith('#') || /^\d+\.?\d*$/.test(line) || isDateLine(line)) {
       return
     }
 

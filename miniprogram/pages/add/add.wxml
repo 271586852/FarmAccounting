@@ -218,13 +218,6 @@
             bindinput="onExpressRecorderInput" />
         </view>
 
-        <!-- 收件人 -->
-        <view class="form-item">
-          <view class="form-label">收件人</view>
-          <input class="express-input" placeholder="请输入收件人姓名" value="{{expressRecipient}}"
-            bindinput="onExpressRecipientInput" />
-        </view>
-
         <!-- 电话 -->
         <view class="form-item">
           <view class="form-label">电话</view>

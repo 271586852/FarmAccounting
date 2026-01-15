@@ -56,16 +56,12 @@
           <view class="record-time">{{item.createTimeDisplay}}</view>
         </view>
         <view class="record-details">
-          <view class="detail-row" wx:if="{{item.recipient}}">
-            <text class="detail-label">收件人：</text>
-            <text class="detail-value">{{item.recipient}}</text>
-          </view>
           <view class="detail-row" wx:if="{{item.phone}}">
             <text class="detail-label">电话：</text>
             <text class="detail-value">{{item.phone}}</text>
           </view>
           <view class="detail-row" wx:if="{{item.address}}">
-            <text class="detail-label">地址：</text>
+            <text class="detail-label">信息：</text>
             <text class="detail-value address-text">{{item.address}}</text>
           </view>
           <view class="detail-row" wx:if="{{item.remark}}">
@@ -102,7 +98,7 @@
           maxlength="5000"
         ></textarea>
         <view class="modal-tip">
-          <text>💡 提示：支持接龙格式，系统会自动解析记录人、地址、收件人、电话、数量等信息</text>
+          <text>💡 提示：支持接龙格式，系统会自动解析记录人、地址、电话、数量等信息</text>
         </view>
       </view>
       <view class="modal-footer">
@@ -148,10 +144,6 @@
         <view class="form-item">
           <text class="form-label">登记人</text>
           <input class="form-input" value="{{editRecord.recorder}}" data-field="recorder" bindinput="onEditInput" placeholder="登记人"/>
-        </view>
-        <view class="form-item">
-          <text class="form-label">收件人</text>
-          <input class="form-input" value="{{editRecord.recipient}}" data-field="recipient" bindinput="onEditInput" placeholder="收件人"/>
         </view>
         <view class="form-item">
           <text class="form-label">电话</text>

@@ -61,6 +61,21 @@ function parseExpressContent(content) {
 }
 
 /**
+ * 将收件人并入地址，避免单独字段
+ * @param {string} address
+ * @param {string} recipient
+ * @returns {string}
+ */
+function mergeRecipientIntoAddress(address, recipient) {
+  const addr = (address || '').trim()
+  const rec = (recipient || '').trim()
+  if (!rec) return addr
+  if (!addr) return rec
+  if (addr.includes(rec)) return addr
+  return `${addr}，${rec}`
+}
+
+/**
  * 解析多行记录
  * @param {string} content - 多行内容
  * @returns {Object|null} 解析后的记录对象
@@ -208,10 +223,13 @@ function parseMultiLineRecord(content) {
   // 仅使用括号后的内容作为备注
   remark = tailRemark
 
+  // 将收件人并入地址并清空单独字段
+  const mergedAddress = mergeRecipientIntoAddress(cleanAddress, recipient)
+
   return {
     recorder: recorder || '未知',
-    address: cleanAddress || '',
-    recipient: recipient || '',
+    address: mergedAddress || '',
+    recipient: '',
     phone: phone || '',
     quantityJu: quantityJu || 0,
     quantityGong: quantityGong || 0,
@@ -397,10 +415,13 @@ function parseLine(line) {
   // 仅使用括号后的内容作为备注
   remark = tailRemark
 
+  // 将收件人并入地址并清空单独字段
+  const mergedAddress = mergeRecipientIntoAddress(cleanAddress, recipient)
+
   return {
     recorder: recorder || '未知',
-    address: cleanAddress || '',
-    recipient: recipient || '',
+    address: mergedAddress || '',
+    recipient: '',
     phone: phone || '',
     quantityJu: quantityJu || 0,
     quantityGong: quantityGong || 0,
@@ -541,8 +562,8 @@ function formatRecordToJielong(record, index) {
 
   const orderText = typeof index === 'number' ? `${index}. ` : ''
   const recorder = (record.recorder || '未知').trim()
-  const address = (record.address || '').trim()
-  const recipient = (record.recipient || '').trim()
+  // 兼容旧数据：若仍有独立收件人，自动并入地址
+  const address = mergeRecipientIntoAddress(record.address, record.recipient).trim()
   const phone = (record.phone || '').trim()
   const remark = (record.remark || '').trim()
 
@@ -557,11 +578,7 @@ function formatRecordToJielong(record, index) {
     line += ` ${address}`
   }
 
-  if (recipient && phone) {
-    line += `，${recipient}：${phone}`
-  } else if (recipient) {
-    line += `，收件人：${recipient}`
-  } else if (phone) {
+  if (phone) {
     line += `，电话：${phone}`
   }
 

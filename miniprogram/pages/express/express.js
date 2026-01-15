@@ -2,6 +2,16 @@ const dbUtil = require('../../util/db')
 const dateUtil = require('../../util/date')
 const expressParser = require('../../util/expressParser')
 
+// 收件人并入地址，兼容旧数据
+const mergeRecipientIntoAddress = (address, recipient) => {
+  const addr = (address || '').trim()
+  const rec = (recipient || '').trim()
+  if (!rec) return addr
+  if (!addr) return rec
+  if (addr.includes(rec)) return addr
+  return `${addr}，${rec}`
+}
+
 Page({
   data: {
     currentDate: dateUtil.getToday(),
@@ -91,8 +101,11 @@ Page({
     return dbUtil.getExpressRecordsByDate(this.data.currentDate)
       .then(res => {
         const records = res.data.map(record => {
+          const mergedAddress = mergeRecipientIntoAddress(record.address, record.recipient)
           return {
             ...record,
+            address: mergedAddress,
+            recipient: '',
             createTimeDisplay: dateUtil.formatCreateTime(record.createTime)
           }
         })
@@ -352,7 +365,11 @@ Page({
     if (!target) return
     this.setData({
       showEditModal: true,
-      editRecord: { ...target }
+      editRecord: { 
+        ...target,
+        address: mergeRecipientIntoAddress(target.address, target.recipient),
+        recipient: ''
+      }
     })
   },
 
@@ -383,9 +400,8 @@ Page({
 
     const payload = {
       recorder: (record.recorder || '').trim(),
-      recipient: (record.recipient || '').trim(),
       phone: (record.phone || '').trim(),
-      address: (record.address || '').trim(),
+      address: mergeRecipientIntoAddress(record.address, record.recipient).trim(),
       remark: (record.remark || '').trim(),
       quantityJu: parseInt(record.quantityJu || 0, 10) || 0,
       quantityGong: parseInt(record.quantityGong || 0, 10) || 0,

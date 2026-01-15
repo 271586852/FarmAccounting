@@ -52,7 +52,6 @@ Page({
     // 快递类记账
     expressInputText: '',  // 快速输入文本
     expressRecorder: '',   // 登记人
-    expressRecipient: '',  // 收件人
     expressPhone: '',      // 电话
     expressAddress: '',    // 地址
     expressQuantityJu: 0, // 桔数
@@ -346,7 +345,6 @@ Page({
     if (parsed) {
       this.setData({
         expressRecorder: parsed.recorder || '',
-        expressRecipient: parsed.recipient || '',
         expressPhone: parsed.phone || '',
         expressAddress: parsed.address || '',
         expressQuantityJu: parsed.quantityJu || 0,
@@ -373,15 +371,6 @@ Page({
   onExpressRecorderInput(e) {
     this.setData({
       expressRecorder: e.detail.value
-    })
-  },
-
-  /**
-   * 收件人输入
-   */
-  onExpressRecipientInput(e) {
-    this.setData({
-      expressRecipient: e.detail.value
     })
   },
 
@@ -610,7 +599,6 @@ Page({
       const expressData = {
         date: this.data.currentDate,
         recorder: this.data.expressRecorder.trim(),
-        recipient: this.data.expressRecipient.trim() || '',
         phone: this.data.expressPhone.trim() || '',
         address: this.data.expressAddress.trim() || '',
         quantityJu: this.data.expressQuantityJu || 0,
@@ -690,7 +678,6 @@ Page({
       this.setData({
         expressInputText: '',
         expressRecorder: '',
-        expressRecipient: '',
         expressPhone: '',
         expressAddress: '',
         expressQuantityJu: 0,

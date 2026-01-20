@@ -7,6 +7,9 @@ Page({
     // 记账类型：normal（普通）或 express（快递）
     billType: 'normal',
     editId: '',
+    currentDate: '',
+    dateDisplay: '',
+    showCalendar: false,
     
     // 普通类记账
     // 种类选项
@@ -65,8 +68,10 @@ Page({
     const userProfile = wx.getStorageSync('userProfile')
     const recorderName = userProfile && userProfile.nickName ? userProfile.nickName : ''
     const editId = options.id || ''
+    const today = dateUtil.getToday()
     this.setData({
-      currentDate: dateUtil.getToday(),
+      currentDate: today,
+      dateDisplay: dateUtil.formatDateDisplay(today),
       recorderName,
       editId
     })
@@ -108,6 +113,7 @@ Page({
       this.setData({
         billType: 'normal',
         currentDate: data.date || dateUtil.getToday(),
+        dateDisplay: dateUtil.formatDateDisplay(data.date || dateUtil.getToday()),
         selectedType,
         selectedTypeIndex: inOptions ? this.data.typeOptions.indexOf(data.type) : this.data.typeOptions.indexOf('其他'),
         showCustomInput,
@@ -144,6 +150,37 @@ Page({
     } finally {
       wx.hideLoading()
     }
+  },
+
+  /**
+   * 显示日历
+   */
+  showCalendar() {
+    this.setData({
+      showCalendar: true
+    })
+  },
+
+  /**
+   * 隐藏日历
+   */
+  hideCalendar() {
+    this.setData({
+      showCalendar: false
+    })
+  },
+
+  /**
+   * 日期选择
+   */
+  onDateSelect(e) {
+    const selectedDate = e.detail.date
+    const date = selectedDate || dateUtil.getToday()
+    this.setData({
+      currentDate: date,
+      dateDisplay: dateUtil.formatDateDisplay(date),
+      showCalendar: false
+    })
   },
 
   /**

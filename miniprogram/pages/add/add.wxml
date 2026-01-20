@@ -1,5 +1,14 @@
 <view class="container">
   <view class="container2">
+    <!-- 日期选择区域，与记录/快递页一致 -->
+    <view class="date-header">
+      <view class="date-picker" bindtap="showCalendar" hover-class="none">
+        <text class="date-text">{{dateDisplay}}</text>
+        <image class="date-icon" src="../../image/calendar.png" mode="aspectFit"></image>
+      </view>
+    </view>
+    <calendar selectedDate="{{currentDate}}" show="{{showCalendar}}" bindselect="onDateSelect" bindclose="hideCalendar"></calendar>
+
     <view class="form-container">
       <!-- 第一行：记账类型选择 -->
       <view class="form-item">

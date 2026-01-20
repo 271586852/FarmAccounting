@@ -1,5 +1,38 @@
 .container {
+  min-height: 100vh;
   background-color: #f5f5f5;
+  padding-bottom: 140rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-sizing: border-box;
+}
+
+.date-header {
+  background-color: #fff;
+  padding: 20rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+  margin-bottom: 20rpx;
+}
+
+.date-picker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.date-text {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.date-icon {
+  width: 40rpx;
+  height: 40rpx;
 }
 
 .container2{
